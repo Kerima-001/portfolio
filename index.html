@@ -1,522 +1,662 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kerima Mussa</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Kerima Mussa - Software Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --black:#0a0a0a;
-  --ink:#1a1a1a;
-  --rule:#d0d0d0;
-  --mid:#6b6b6b;
-  --light:#f0f0f0;
-  --white:#ffffff;
-  --serif:'DM Serif Display',Georgia,serif;
+  --bg:#05070b;
+  --bg2:#090d14;
+  --panel:#0c1119;
+  --panel-hi:#101725;
+  --line:#1b2434;
+  --line-hi:#2a3750;
+  --cyan:#4be8d4;
+  --cyan-dim:#2d7d73;
+  --violet:#8b7cf6;
+  --amber:#ffb454;
+  --text:#e7ecf3;
+  --muted:#8592a8;
+  --muted-dim:#4d5871;
+  --display:'Space Grotesk',sans-serif;
   --sans:'Inter',sans-serif;
   --mono:'JetBrains Mono',monospace;
 }
-html{scroll-behavior:smooth}
-body{background:var(--white);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6}
+html,body{height:100%}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+body{
+  background:var(--bg);color:var(--text);font-family:var(--sans);
+  font-size:15px;line-height:1.6;overflow:hidden;
+}
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:64px 64px;opacity:.6;
+}
+.bg-glow{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 900px 500px at 20% 0%,rgba(139,124,246,.10),transparent 60%),
+             radial-gradient(ellipse 700px 500px at 85% 15%,rgba(75,232,212,.08),transparent 60%);
+}
+::selection{background:var(--cyan);color:#000}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line-hi);border-radius:0}
+::-webkit-scrollbar-thumb:hover{background:var(--cyan-dim)}
+
+/* ── HUD panel utility ── */
+.hud{position:relative;border:1px solid var(--line);background:var(--panel)}
+.hud::before,.hud::after{content:'';position:absolute;width:11px;height:11px;pointer-events:none}
+.hud::before{top:-1px;left:-1px;border-top:2px solid var(--cyan);border-left:2px solid var(--cyan)}
+.hud::after{bottom:-1px;right:-1px;border-bottom:2px solid var(--cyan);border-right:2px solid var(--cyan)}
 
 /* ── NAV ── */
 nav{
   position:fixed;top:0;left:0;right:0;z-index:99;
   display:flex;justify-content:space-between;align-items:center;
-  padding:.9rem 3rem;
-  background:rgba(255,255,255,.92);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--rule);
+  padding:.85rem 3rem;
+  background:rgba(5,7,11,.82);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
 }
-.nav-logo{font-family:var(--serif);font-size:1.1rem;letter-spacing:.01em;color:var(--black)}
-.nav-links{display:flex;gap:2rem;list-style:none}
-.nav-links a{font-size:12px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .2s}
-.nav-links a:hover{color:var(--black)}
+.nav-logo{font-family:var(--mono);font-size:.85rem;letter-spacing:.02em;color:var(--text);display:flex;align-items:center;gap:.55rem}
+.nav-logo .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:blink 2.4s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.nav-links{display:flex;gap:1.75rem;list-style:none}
+.nav-links button{background:none;border:none;cursor:pointer;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);transition:color .2s}
+.nav-links button::before{content:'0'attr(data-n)' ';color:var(--cyan-dim);margin-right:2px}
+.nav-links button:hover,.nav-links button.active{color:var(--cyan)}
+.nav-status{display:flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:10px;color:var(--muted-dim);letter-spacing:.05em}
 
-/* ── HERO ── */
-.hero{
-  min-height:100vh;
-  display:grid;
-  grid-template-columns:1fr 420px;
-  align-items:center;
-  gap:4rem;
-  padding:120px 3rem 60px;
-  max-width:1160px;
-  margin:0 auto;
+.progress-rail{position:fixed;top:0;left:0;height:2px;background:var(--cyan);z-index:100;box-shadow:0 0 8px var(--cyan);transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+#deck{
+  height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;
+  scroll-behavior:smooth;position:relative;z-index:1;
 }
+.slide{
+  min-height:100vh;scroll-snap-align:start;scroll-snap-stop:always;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:96px 3rem 70px;position:relative;
+}
+.slide-inner{max-width:1180px;margin:0 auto;width:100%;max-height:calc(100vh - 166px);overflow-y:auto;padding-right:4px}
+
+.deck-dots{position:fixed;right:1.6rem;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:.85rem;align-items:center}
+.deck-dots button{width:8px;height:8px;border-radius:50%;background:var(--line-hi);border:none;cursor:pointer;padding:0;transition:all .25s;position:relative}
+.deck-dots button.active{background:var(--cyan);box-shadow:0 0 10px var(--cyan);transform:scale(1.3)}
+.deck-dots button:hover{background:var(--cyan-dim)}
+.deck-dots .tip{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap;background:var(--panel);border:1px solid var(--line);padding:3px 8px;opacity:0;pointer-events:none;transition:opacity .2s}
+.deck-dots button:hover .tip{opacity:1}
+
+.deck-controls{position:fixed;bottom:1.6rem;right:1.8rem;z-index:100;display:flex;align-items:center;gap:.9rem;font-family:var(--mono)}
+.deck-count{font-size:11px;color:var(--muted-dim);letter-spacing:.04em}
+.deck-count .cur{color:var(--cyan)}
+.arrow-btn{width:34px;height:34px;border:1px solid var(--line-hi);background:var(--panel);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:14px}
+.arrow-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.arrow-btn:disabled{opacity:.25;cursor:default}
+.arrow-btn:disabled:hover{border-color:var(--line-hi);color:var(--text)}
+
+#slide-hero{padding-top:96px}
+.hero-grid{display:grid;grid-template-columns:1fr 380px;align-items:center;gap:4rem;max-width:1180px;margin:0 auto;width:100%}
+#net-canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.55;pointer-events:none}
 .hero-eyebrow{
-  font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--mid);margin-bottom:1.25rem;
-  display:flex;align-items:center;gap:.75rem
+  font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:1.4rem;display:flex;align-items:center;gap:.7rem
 }
-.hero-eyebrow::before{content:'';width:32px;height:1px;background:var(--ink)}
+.hero-eyebrow::before{content:'>';color:var(--muted-dim)}
 .hero h1{
-  font-family:var(--serif);
-  font-size:clamp(3.2rem,6.5vw,5.5rem);
-  font-weight:400;line-height:1.02;
-  letter-spacing:-.02em;
-  margin-bottom:.5rem
+  font-family:var(--display);font-weight:700;
+  font-size:clamp(2.6rem,5.4vw,4.6rem);line-height:1.02;letter-spacing:-.02em;
+  margin-bottom:.6rem;
 }
-.hero h1 em{font-style:italic;color:var(--mid)}
-.hero-sub{
-  font-size:.9rem;color:var(--mid);max-width:440px;
-  line-height:1.8;margin:1.25rem 0 2rem;font-weight:300
-}
-.hero-cta{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:3rem}
+.cursor{display:inline-block;width:.5em;height:.85em;background:var(--cyan);margin-left:4px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+.hero-sub{font-size:.92rem;color:var(--muted);max-width:460px;line-height:1.85;margin:1.3rem 0 2rem;font-weight:300}
+.hero-cta{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:2.4rem}
 .btn{
-  display:inline-flex;align-items:center;gap:.5rem;
-  padding:.7rem 1.5rem;border-radius:2px;font-size:12px;font-weight:500;
-  letter-spacing:.06em;text-transform:uppercase;text-decoration:none;
-  transition:all .2s;font-family:var(--sans)
+  display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;
+  font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.04em;
+  text-decoration:none;transition:all .2s;border:1px solid;
 }
-.btn-dark{background:var(--black);color:var(--white);border:1.5px solid var(--black)}
-.btn-dark:hover{background:transparent;color:var(--black)}
-.btn-outline{background:transparent;color:var(--black);border:1.5px solid var(--rule)}
-.btn-outline:hover{border-color:var(--black)}
-.hero-stats{
-  display:flex;gap:2.5rem;padding-top:2rem;
-  border-top:1px solid var(--rule)
-}
-.stat-val{font-family:var(--serif);font-size:2rem;font-weight:400;line-height:1;color:var(--black)}
-.stat-lbl{font-size:11px;color:var(--mid);margin-top:.2rem;letter-spacing:.05em;text-transform:uppercase}
+.btn-solid{background:var(--cyan);color:#04140f;border-color:var(--cyan)}
+.btn-solid:hover{background:transparent;color:var(--cyan);box-shadow:0 0 22px rgba(75,232,212,.25)}
+.btn-ghost{background:transparent;color:var(--text);border-color:var(--line-hi)}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+.hero-stats{display:flex;gap:0;border-top:1px solid var(--line);padding-top:1.5rem}
+.stat{padding-right:2.1rem;margin-right:2.1rem;border-right:1px solid var(--line)}
+.stat:last-child{border-right:none;margin-right:0;padding-right:0}
+.stat-val{font-family:var(--display);font-size:1.7rem;font-weight:600;color:var(--text);line-height:1}
+.stat-lbl{font-family:var(--mono);font-size:9.5px;color:var(--muted-dim);margin-top:.3rem;letter-spacing:.05em;text-transform:uppercase}
+.scroll-hint{position:absolute;bottom:1.8rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;font-family:var(--mono);font-size:10px;color:var(--muted-dim);letter-spacing:.08em;text-transform:uppercase}
+.scroll-hint .chev{animation:bob 1.8s infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
 
-/* ── PHOTO ── */
-.photo-wrap{
-  display:flex;align-items:center;justify-content:center;
-  position:relative
-}
+.id-card{padding:0;overflow:hidden}
+.id-head{display:flex;justify-content:space-between;align-items:center;padding:.6rem .9rem;border-bottom:1px solid var(--line);background:var(--bg2)}
+.id-head span{font-family:var(--mono);font-size:10px;color:var(--muted-dim);letter-spacing:.05em}
+.id-dots{display:flex;gap:5px}
+.id-dots i{width:7px;height:7px;border-radius:50%;background:var(--line-hi);display:block}
+.photo-frame{position:relative;padding:1.7rem}
 .photo-ring{
-  position:relative;
-  width:340px;height:340px
+  position:absolute;inset:6px;border-radius:50%;
+  border:1px dashed var(--cyan-dim);
+  animation:spin 24s linear infinite;pointer-events:none;z-index:1;
 }
-.photo-ring::before{
-  content:'';
-  position:absolute;inset:-12px;
+.photo-ring::before,.photo-ring::after{content:'';position:absolute;width:5px;height:5px;border-radius:50%;background:var(--cyan);box-shadow:0 0 6px var(--cyan)}
+.photo-ring::before{top:-2.5px;left:50%;transform:translateX(-50%)}
+.photo-ring::after{bottom:-2.5px;left:50%;transform:translateX(-50%)}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.photo-hex{
+  position:relative;width:100%;aspect-ratio:1/1;
   border-radius:50%;
-  border:1px solid var(--rule)
+  overflow:hidden;background:var(--bg2);
+  border:1px solid var(--line-hi);
+  z-index:2;
 }
-.photo-ring::after{
-  content:'';
-  position:absolute;inset:-24px;
-  border-radius:50%;
-  border:1px dashed var(--rule)
-}
-.photo-circle{
-  width:340px;height:340px;
-  border-radius:50%;
-  overflow:hidden;
-  border:3px solid var(--white);
-  box-shadow:0 12px 48px rgba(0,0,0,.12),0 0 0 1px var(--rule);
-  position:relative;z-index:2
-}
-.photo-circle img{width:100%;height:100%;object-fit:cover;object-position:center top}
-.photo-tag{
-  position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);
-  background:var(--black);color:var(--white);
-  font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
-  padding:.4rem 1rem;border-radius:2px;white-space:nowrap;z-index:3
-}
-.photo-dot{
-  position:absolute;top:16px;right:-8px;
-  width:10px;height:10px;border-radius:50%;
-  background:var(--black);z-index:3;
-  box-shadow:0 0 0 3px var(--white),0 0 0 4px var(--rule)
-}
+.photo-hex img{width:100%;height:100%;object-fit:cover;object-position:center top;filter:saturate(.9) contrast(1.05)}
+.photo-hex::after{content:'';position:absolute;inset:0;border-radius:50%;background:linear-gradient(180deg,transparent 60%,rgba(5,7,11,.75));}
+.id-meta{padding:0 1.3rem 1.3rem}
+.id-row{display:flex;justify-content:space-between;padding:.45rem 0;border-bottom:1px dashed var(--line);font-family:var(--mono);font-size:11px}
+.id-row:last-child{border-bottom:none}
+.id-row .k{color:var(--muted-dim);text-transform:uppercase;letter-spacing:.05em}
+.id-row .v{color:var(--cyan)}
 
-/* ── DIVIDER ── */
-.divider{max-width:1160px;margin:0 auto;border:none;border-top:1px solid var(--rule)}
+.section-head{display:flex;align-items:baseline;gap:1rem;margin-bottom:2.4rem}
+.section-n{font-family:var(--mono);font-size:11px;color:var(--cyan-dim)}
+.section-title{font-family:var(--display);font-size:1.75rem;font-weight:600;letter-spacing:-.01em}
+.section-rule{flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
 
-/* ── SECTION ── */
-.section{max-width:1160px;margin:0 auto;padding:5rem 3rem}
-.section-head{
-  display:flex;align-items:baseline;gap:1rem;
-  margin-bottom:3rem;border-bottom:1px solid var(--rule);padding-bottom:1.25rem
-}
-.section-n{font-family:var(--mono);font-size:11px;color:var(--mid)}
-.section-title{font-family:var(--serif);font-size:2rem;font-weight:400;font-style:italic}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1px;background:var(--line)}
+.skill-cell{background:var(--panel);padding:1.4rem;transition:background .15s}
+.skill-cell:hover{background:var(--panel-hi)}
+.skill-cat{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--violet);margin-bottom:.9rem}
+.skill-tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.tag{font-family:var(--mono);font-size:11.5px;padding:4px 10px;border:1px solid var(--line-hi);color:var(--muted);background:var(--bg2);transition:all .15s}
+.tag:hover{color:var(--cyan);border-color:var(--cyan-dim)}
 
-/* ── SKILLS ── */
-.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}
-.skill-cell{background:var(--white);padding:1.5rem;transition:background .15s}
-.skill-cell:hover{background:var(--light)}
-.skill-cat{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--black);margin-bottom:.875rem}
-.skill-tags{display:flex;flex-wrap:wrap;gap:.35rem}
-.tag{font-size:12px;padding:3px 10px;border:1px solid var(--rule);color:var(--mid);background:var(--light)}
+.timeline{position:relative;padding-left:2px}
+.timeline::before{content:'';position:absolute;left:5px;top:8px;bottom:8px;width:1px;background:linear-gradient(180deg,var(--cyan-dim),var(--line) 90%)}
+.tl-item{display:grid;grid-template-columns:160px 1fr;gap:2.2rem;padding:0 0 2.1rem 2.6rem;position:relative}
+.tl-item:last-child{padding-bottom:0}
+.tl-item::before{content:'';position:absolute;left:0;top:5px;width:11px;height:11px;border:2px solid var(--cyan);background:var(--bg);box-shadow:0 0 10px rgba(75,232,212,.4)}
+.tl-co{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--text);letter-spacing:.01em}
+.tl-date{font-size:11px;color:var(--muted-dim);margin-top:.25rem;font-family:var(--mono)}
+.tl-role{font-family:var(--display);font-size:1.1rem;font-weight:600;margin-bottom:.5rem;color:var(--cyan)}
+.tl-desc{font-size:.84rem;color:var(--muted);line-height:1.75;margin-bottom:.85rem;font-weight:300}
+.badges{display:flex;flex-wrap:wrap;gap:.35rem}
+.badge{font-size:10.5px;padding:2px 9px;background:var(--bg2);border:1px solid var(--line-hi);color:var(--muted);font-family:var(--mono)}
 
-/* ── TIMELINE ── */
-.timeline{position:relative}
-.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--rule)}
-.tl-item{display:grid;grid-template-columns:180px 1fr;gap:2.5rem;padding:2.5rem 0 2.5rem 2.5rem;border-bottom:1px solid var(--rule);position:relative}
-.tl-item::before{content:'';position:absolute;left:-4px;top:2.75rem;width:8px;height:8px;border-radius:50%;background:var(--black);border:2px solid var(--white);box-shadow:0 0 0 1px var(--black)}
-.tl-co{font-size:12px;font-weight:600;color:var(--ink);letter-spacing:.02em}
-.tl-date{font-size:11px;color:var(--mid);margin-top:.2rem;font-family:var(--mono)}
-.tl-role{font-family:var(--serif);font-size:1.15rem;font-style:italic;margin-bottom:.5rem}
-.tl-desc{font-size:.85rem;color:var(--mid);line-height:1.8;margin-bottom:.875rem;font-weight:300}
-.badges{display:flex;flex-wrap:wrap;gap:.3rem}
-.badge{font-size:11px;padding:2px 8px;background:var(--light);border:1px solid var(--rule);color:var(--ink);font-family:var(--mono)}
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1px;background:var(--line)}
+.proj-card{background:var(--panel);padding:1.6rem;text-decoration:none;color:inherit;display:block;position:relative;overflow:hidden;transition:background .15s}
+.proj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);transform:scaleX(0);transition:transform .3s}
+.proj-card:hover::before{transform:scaleX(1)}
+.proj-card:hover{background:var(--panel-hi)}
+.proj-card:hover .proj-arrow{opacity:1;transform:translate(2px,-2px);color:var(--cyan)}
+.proj-arrow{position:absolute;top:1.4rem;right:1.4rem;font-size:.9rem;opacity:.3;transition:all .2s;color:var(--muted)}
+.proj-n{font-size:10.5px;color:var(--muted-dim);font-family:var(--mono);margin-bottom:.75rem;letter-spacing:.03em}
+.proj-name{font-family:var(--display);font-size:1.1rem;font-weight:600;margin-bottom:.6rem;color:var(--text)}
+.proj-desc{font-size:.82rem;color:var(--muted);line-height:1.75;margin-bottom:.9rem;font-weight:300}
 
-/* ── PROJECTS ── */
-.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}
-.proj-card{background:var(--white);padding:2rem;text-decoration:none;color:inherit;display:block;transition:background .15s;position:relative}
-.proj-card:hover{background:var(--light)}
-.proj-card:hover .proj-arrow{opacity:1;transform:translate(3px,-3px)}
-.proj-arrow{position:absolute;top:1.5rem;right:1.5rem;font-size:.9rem;opacity:.25;transition:all .2s;color:var(--black)}
-.proj-n{font-size:11px;color:var(--mid);font-family:var(--mono);margin-bottom:.75rem}
-.proj-name{font-family:var(--serif);font-size:1.15rem;font-style:italic;margin-bottom:.625rem;color:var(--black)}
-.proj-desc{font-size:.82rem;color:var(--mid);line-height:1.75;margin-bottom:1rem;font-weight:300}
+.awards-list{display:flex;flex-direction:column;gap:1px;background:var(--line)}
+.award-row{background:var(--panel);padding:1rem 1.4rem;display:grid;grid-template-columns:90px 1fr auto;gap:1.5rem;align-items:baseline;transition:background .15s}
+.award-row:hover{background:var(--panel-hi)}
+.award-yr{font-family:var(--mono);font-size:11px;color:var(--cyan-dim)}
+.award-n{font-size:.86rem;font-weight:500;color:var(--text)}
+.award-org{font-family:var(--mono);font-size:11px;color:var(--muted-dim);text-align:right;white-space:nowrap}
+.award-d{grid-column:2/4;font-size:.79rem;color:var(--muted);line-height:1.65;font-weight:300;margin-top:.3rem}
 
-/* ── AWARDS ── */
-.awards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}
-.award-card{background:var(--white);padding:1.75rem;position:relative;transition:background .15s}
-.award-card:hover{background:var(--light)}
-.award-yr{position:absolute;top:1.5rem;right:1.5rem;font-size:11px;color:var(--mid);font-family:var(--mono)}
-.award-n{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);line-height:1.4;margin-bottom:.35rem}
-.award-org{font-family:var(--serif);font-size:.95rem;font-style:italic;color:var(--mid);margin-bottom:.5rem}
-.award-d{font-size:.8rem;color:var(--mid);line-height:1.65;font-weight:300}
+.about-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:3.5rem;align-items:start}
+.about-text p{color:var(--muted);line-height:1.85;margin-bottom:.95rem;font-size:.88rem;font-weight:300}
+.about-text p strong{color:var(--cyan);font-weight:500}
+.about-blocks{display:flex;flex-direction:column;gap:1px;background:var(--line)}
+.about-block{background:var(--panel);padding:1.1rem 1.4rem}
+.ab-title{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--violet);margin-bottom:.5rem}
+.ab-body{font-size:.8rem;color:var(--muted);line-height:1.8;font-weight:300}
 
-/* ── ABOUT ── */
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
-.about-text p{color:var(--mid);line-height:1.9;margin-bottom:1rem;font-size:.92rem;font-weight:300}
-.about-text p strong{color:var(--ink);font-weight:500}
-.about-blocks{display:flex;flex-direction:column;gap:1px;background:var(--rule);border:1px solid var(--rule)}
-.about-block{background:var(--white);padding:1.25rem 1.5rem}
-.ab-title{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--black);margin-bottom:.5rem}
-.ab-body{font-size:.83rem;color:var(--mid);line-height:1.8;font-weight:300}
+.contact-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);margin-bottom:2.4rem}
+.contact-item{background:var(--panel);padding:2rem 1.7rem;transition:background .15s}
+.contact-item:hover{background:var(--panel-hi)}
+.c-label{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-dim);margin-bottom:.5rem}
+.c-val{font-size:.9rem;color:var(--text);text-decoration:none;font-weight:400}
+.c-val:hover{color:var(--cyan)}
+.deck-footer{display:flex;justify-content:space-between;align-items:center;padding-top:1.4rem;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--muted-dim)}
+.footer-name{font-family:var(--display);font-size:.9rem;color:var(--cyan);font-weight:600}
 
-/* ── CONTACT ── */
-.contact-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
-.contact-item{background:var(--white);padding:2rem 1.75rem;transition:background .15s}
-.contact-item:hover{background:var(--light)}
-.c-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--black);margin-bottom:.4rem}
-.c-val{font-size:.875rem;color:var(--mid);text-decoration:none;font-weight:300}
-.c-val:hover{color:var(--black)}
-
-/* ── FOOTER ── */
-footer{
-  max-width:1160px;margin:0 auto;
-  padding:2rem 3rem 3rem;
-  border-top:1px solid var(--rule);
-  display:flex;justify-content:space-between;align-items:center;
-  font-size:12px;color:var(--mid)
-}
-.footer-name{font-family:var(--serif);font-size:1rem;color:var(--black);font-style:italic}
-
-/* ── RESPONSIVE ── */
 @media(max-width:900px){
-  nav{padding:.9rem 1.5rem}
+  nav{padding:.85rem 1.2rem}
   .nav-links{display:none}
-  .hero{grid-template-columns:1fr;padding:100px 1.5rem 3rem}
-  .photo-wrap{order:-1}
-  .photo-ring,.photo-circle{width:220px;height:220px}
-  .section{padding:3.5rem 1.5rem}
+  .deck-dots{right:.7rem;gap:.6rem}
+  .deck-dots .tip{display:none}
+  .deck-controls{right:1rem;bottom:1rem}
+  .slide{padding:88px 1.3rem 60px}
+  .slide-inner{max-height:calc(100vh - 148px)}
+  .hero-grid{grid-template-columns:1fr;gap:2rem}
+  .id-card{order:-1;max-width:250px;margin:0 auto}
   .about-grid,.contact-row{grid-template-columns:1fr}
   .tl-item{grid-template-columns:1fr;gap:.4rem}
-  footer{flex-direction:column;gap:.5rem;text-align:center}
+  .award-row{grid-template-columns:1fr;gap:.3rem}
+  .award-org{text-align:left}
+  .award-d{grid-column:1}
+  .deck-footer{flex-direction:column;gap:.5rem;text-align:center}
+  .hero-stats{flex-wrap:wrap;gap:1rem 0}
+  .stat{padding-right:1.1rem;margin-right:1.1rem}
 }
 </style>
 </head>
 <body>
 
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+<div class="progress-rail" id="progress-rail" style="width:0%"></div>
+
 <nav>
-  <div class="nav-logo">Kerima Mussa</div>
+  <div class="nav-logo"><span class="dot"></span>KERIMA.MUSSA</div>
   <ul class="nav-links">
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#awards">Awards</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><button data-n="0" data-target="0">Intro</button></li>
+    <li><button data-n="1" data-target="1">Skills</button></li>
+    <li><button data-n="2" data-target="2">Experience</button></li>
+    <li><button data-n="3" data-target="3">Projects</button></li>
+    <li><button data-n="4" data-target="4">Awards</button></li>
+    <li><button data-n="5" data-target="5">About</button></li>
+    <li><button data-n="6" data-target="6">Contact</button></li>
   </ul>
+  <div class="nav-status">STATUS: <span style="color:var(--cyan)">OPEN_TO_WORK</span></div>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div>
-    <div class="hero-eyebrow">Software Engineer | AI/ML, Data Science, Cloud & DevOps</div>
-    <h1>Kerima<br><em>Mussa</em></h1>
-    <p class="hero-sub">Building intelligent systems, full-stack applications, and data-driven tools that solve real problems. New Haven, CT..</p>
-    <div class="hero-cta">
-      <a href="mailto:kmussa2025@gmail.com" class="btn btn-dark">Get in touch</a>
-      <a href="https://linkedin.com/in/kerima-mussa-a72735277" target="_blank" class="btn btn-outline">LinkedIn ↗</a>
-      <a href="https://github.com/Kerima-001" target="_blank" class="btn btn-outline">GitHub ↗</a>
-    </div>
-    <div class="hero-stats">
-      <div class="stat"><div class="stat-val">4-5+</div><div class="stat-lbl">Experience</div></div>
-      <div class="stat"><div class="stat-val">6+</div><div class="stat-lbl">Projects built</div></div>
-      <div class="stat"><div class="stat-val">2×</div><div class="stat-lbl">Competition winner</div></div>
-      <div class="stat"><div class="stat-val">2026</div><div class="stat-lbl">B.S. CS grad</div></div>
-    </div>
-  </div>
+<div class="deck-dots" id="deck-dots"></div>
+<div class="deck-controls">
+  <button class="arrow-btn" id="prev-btn" aria-label="Previous slide">↑</button>
+  <span class="deck-count"><span class="cur" id="count-cur">01</span> / <span id="count-tot">07</span></span>
+  <button class="arrow-btn" id="next-btn" aria-label="Next slide">↓</button>
+</div>
 
-  <div class="photo-wrap">
-    <div class="photo-ring">
-      <div class="photo-dot"></div>
-      <div class="photo-circle">
-        <img src="Kerima_Photo.jpg" alt="Kerima Mussa">
-      </div>
-      <div class="photo-tag">Available · June 2026</div>
-    </div>
-  </div>
-</section>
+<div id="deck">
 
-<hr class="divider">
-
-<!-- SKILLS -->
-<section class="section" id="skills">
-  <div class="section-head">
-    <span class="section-n">01</span>
-    <h2 class="section-title">Technical Skills</h2>
-  </div>
-  <div class="skills-grid">
-    <div class="skill-cell">
-      <div class="skill-cat">Languages</div>
-      <div class="skill-tags">
-        <span class="tag">Python</span><span class="tag">JavaScript</span>
-        <span class="tag">Java</span><span class="tag">SQL</span>
-        <span class="tag">C++</span><span class="tag">HTML/CSS</span>
-        <span class="tag">Dart</span>
-      </div>
-    </div>
-    <div class="skill-cell">
-      <div class="skill-cat">Frameworks</div>
-      <div class="skill-tags">
-        <span class="tag">React</span><span class="tag">FastAPI</span>
-        <span class="tag">Flask</span><span class="tag">Flutter</span>
-        <span class="tag">LangChain</span><span class="tag">Node.js</span>
-        <span class="tag">NumPy</span><span class="tag">Pandas</span>
-      </div>
-    </div>
-    <div class="skill-cell">
-      <div class="skill-cat">Data &amp; Cloud</div>
-      <div class="skill-tags">
-        <span class="tag">PostgreSQL</span><span class="tag">SQLite</span>
-        <span class="tag">Power BI</span><span class="tag">Firebase</span>
-        <span class="tag">Google Cloud</span><span class="tag">Docker</span>
-        <span class="tag">Supabase</span>
-      </div>
-    </div>
-    <div class="skill-cell">
-      <div class="skill-cat">AI / ML</div>
-      <div class="skill-tags">
-        <span class="tag">scikit-learn</span><span class="tag">Qiskit</span>
-        <span class="tag">ML pipelines</span><span class="tag">Predictive modeling</span>
-        <span class="tag">NLP</span><span class="tag">Selenium</span>
-        <span class="tag">Git</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="divider">
-
-<!-- EXPERIENCE -->
-<section class="section" id="experience">
-  <div class="section-head">
-    <span class="section-n">02</span>
-    <h2 class="section-title">Work Experience</h2>
-  </div>
-  <div class="timeline">
-    <div class="tl-item">
+  <section class="slide" id="slide-hero" data-slide="0">
+    <canvas id="net-canvas"></canvas>
+    <div class="hero-grid">
       <div>
-        <div class="tl-co">GAO Tek Inc.</div>
-        <div class="tl-date">Jun - Sep 2025</div>
+        <div class="hero-eyebrow">software_engineer · ai/ml · data · cloud</div>
+        <h1>Kerima Mussa<span class="cursor"></span></h1>
+        <p class="hero-sub">I build intelligent systems, full-stack applications, and data-driven tools — from ML pipelines and quantum classifiers to production APIs. New Haven, CT.</p>
+        <div class="hero-cta">
+          <a href="mailto:kmussa2025@gmail.com" class="btn btn-solid">Get in touch</a>
+          <a href="https://linkedin.com/in/kerima-mussa-a72735277" target="_blank" class="btn btn-ghost">LinkedIn ↗</a>
+          <a href="https://github.com/Kerima-001" target="_blank" class="btn btn-ghost">GitHub ↗</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><div class="stat-val">4–5+ yrs</div><div class="stat-lbl">Experience</div></div>
+          <div class="stat"><div class="stat-val">6+</div><div class="stat-lbl">Projects shipped</div></div>
+          <div class="stat"><div class="stat-val">2×</div><div class="stat-lbl">Comp. winner</div></div>
+          <div class="stat"><div class="stat-val">2026</div><div class="stat-lbl">B.S. CS grad</div></div>
+        </div>
       </div>
-      <div>
-        <div class="tl-role">AI & Web Developer Intern</div>
-        <p class="tl-desc">Engineered production-grade RESTful APIs and backend services supporting web applications used across global engineering teams. Deployed AI-powered pipelines automating documentation generation, summarization, and code annotation at scale using LangChain and Python.</p>
-        <div class="badges"><span class="badge">Python</span><span class="badge">LangChain</span><span class="badge">React</span><span class="badge">REST APIs</span><span class="badge">Flask</span></div>
-      </div>
-    </div>
-    <div class="tl-item">
-      <div>
-        <div class="tl-co">Sheraton Duluth Hotel</div>
-        <div class="tl-date">Jan 2025 - Mar 2026</div>
-      </div>
-      <div>
-        <div class="tl-role">Software Systems Intern</div>
-        <p class="tl-desc">Designed Python-based data processing pipelines and automated reporting systems, reducing manual data handling time by 30%. Built performance dashboards monitoring guest satisfaction scores and key operational metrics in real time.</p>
-        <div class="badges"><span class="badge">Python</span><span class="badge">SQL</span><span class="badge">Automation</span><span class="badge">Dashboards</span></div>
-      </div>
-    </div>
-    <div class="tl-item">
-      <div>
-        <div class="tl-co">UW-Superior Link Center</div>
-        <div class="tl-date">May 2024 - Oct 2025</div>
-      </div>
-      <div>
-        <div class="tl-role">Research Assistant - Data & Policy</div>
-        <p class="tl-desc">Led end-to-end data collection, cleaning, and multi-source integration to model the impact of federal funding changes across Northeast Minnesota communities. Applied EDA and statistical techniques to surface actionable trends for stakeholder reports.</p>
-        <div class="badges"><span class="badge">Python</span><span class="badge">Statistical analysis</span><span class="badge">EDA</span><span class="badge">Data integration</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="divider">
-
-<!-- PROJECTS -->
-<section class="section" id="projects">
-  <div class="section-head">
-    <span class="section-n">03</span>
-    <h2 class="section-title">Selected Projects</h2>
-  </div>
-  <div class="proj-grid">
-    <a href="https://github.com/Kerima-001/RententionIQ-Pro" target="_blank" class="proj-card">
-      <div class="proj-arrow">↗</div>
-      <div class="proj-n">01 · Python · React · FastAPI · Qiskit</div>
-      <div class="proj-name">RetentionIQ Pro</div>
-      <p class="proj-desc">Predicts customer churn before it happens. Live React dashboard with slider-driven predictions, signal breakdown bars, and personalized retention recommendations. Includes experimental Qiskit quantum classifier.</p>
-      <div class="badges"><span class="badge">Python</span><span class="badge">React</span><span class="badge">SQLite</span><span class="badge">Qiskit</span></div>
-    </a>
-    <a href="https://github.com/Kerima-001/Eco_Sense_Ai" target="_blank" class="proj-card">
-      <div class="proj-arrow">↗</div>
-      <div class="proj-n">02 · Python · Signal Processing</div>
-      <div class="proj-name">Eco Sense AI</div>
-      <p class="proj-desc">Listens to a room and tells you how much energy it is wasting. Uses microphone audio FFT, RMS, zero-crossing rate  and to estimate occupancy, HVAC load, and CO₂ output in real time.</p>
-      <div class="badges"><span class="badge">Python</span><span class="badge">NumPy</span><span class="badge">FFT</span></div>
-    </a>
-    <a href="https://github.com/Kerima-001/Campus-Safety-Alert" target="_blank" class="proj-card">
-      <div class="proj-arrow">↗</div>
-      <div class="proj-n">03 · Flutter · FastAPI · Firebase</div>
-      <div class="proj-name">Campus Safety Alert App</div>
-      <p class="proj-desc">One tap SOS, real time emergency alerts, and live campus safety mapping for universities. Location-aware notifications based on proximity to an incident.</p>
-      <div class="badges"><span class="badge">Flutter</span><span class="badge">FastAPI</span><span class="badge">PostgreSQL</span><span class="badge">Firebase</span></div>
-    </a>
-    <a href="https://github.com/Kerima-001/DeptOpsToolkit" target="_blank" class="proj-card">
-      <div class="proj-arrow">↗</div>
-      <div class="proj-n">04 · Python · FastAPI · Chart.js</div>
-      <div class="proj-name">Department Operations Platform</div>
-      <p class="proj-desc">Enterprise admin system for academic departments like the budgets, faculty, courses, equipment inventory, research grants, and analytics dashboards built to simulate real university operations software.</p>
-      <div class="badges"><span class="badge">Python</span><span class="badge">FastAPI</span><span class="badge">SQLAlchemy</span><span class="badge">Chart.js</span></div>
-    </a>
-    <a href="https://github.com/Kerima-001/AI-Doc" target="_blank" class="proj-card">
-      <div class="proj-arrow">↗</div>
-      <div class="proj-n">05 · LangChain · Flask · NLP</div>
-      <div class="proj-name">AI Documentation System</div>
-      <p class="proj-desc">Automates the part of engineering nobody wants to do. Generates docs, summarizes codebases, and annotates functions so teams can focus on shipping features instead of writing documentation.</p>
-      <div class="badges"><span class="badge">LangChain</span><span class="badge">Flask</span><span class="badge">Python</span><span class="badge">NLP</span></div>
-    </a>
-    <a href="https://github.com/Kerima-001/Capstone-Project" target="_blank" class="proj-card">
-      <div class="proj-arrow">↗</div>
-      <div class="proj-n">06 · Python · Selenium · REST APIs</div>
-      <div class="proj-name">Course Scheduling Intelligence</div>
-      <p class="proj-desc">Senior Capstone. Scrapes live course data and recommends the right courses based on a student's history, degree requirements, and scheduling constraints.</p>
-      <div class="badges"><span class="badge">Python</span><span class="badge">Selenium</span><span class="badge">REST APIs</span><span class="badge">Automation</span></div>
-    </a>
-  </div>
-</section>
-
-<hr class="divider">
-
-<!-- AWARDS -->
-<section class="section" id="awards">
-  <div class="section-head">
-    <span class="section-n">04</span>
-    <h2 class="section-title">Awards &amp; Recognition</h2>
-  </div>
-  <div class="awards-grid">
-    <div class="award-card">
-      <div class="award-yr">2× Winner</div>
-      <div class="award-n">Programming &amp;Competition Winner</div>
-      <div class="award-org">Math &amp; CS Club</div>
-      <p class="award-d">Won the annual competition twice in algorithmic problem-solving and software challenges.</p>
-    </div>
-    <div class="award-card">
-      <div class="award-yr">Multi-term</div>
-      <div class="award-n">Dean's List &amp; Academic Excellence</div>
-      <div class="award-org">UW-Superior</div>
-      <p class="award-d">Recognized on the Dean's List across multiple academic terms for outstanding CS performance.</p>
-    </div>
-    <div class="award-card">
-      <div class="award-yr">2025–2026</div>
-      <div class="award-n">TMCF Scholar</div>
-      <div class="award-org">Thurgood Marshall College Fund</div>
-      <p class="award-d">Selected for academic excellence and leadership potential in STEM fields.</p>
-    </div>
-    <div class="award-card">
-      <div class="award-yr">2025</div>
-      <div class="award-n">Hackathon Group Lead Award</div>
-      <div class="award-org">Madhacks 2025</div>
-      <p class="award-d">Recognized as Group Lead for delivering a working technical solution under time constraints.</p>
-    </div>
-    <div class="award-card">
-      <div class="award-yr">ESC</div>
-      <div class="award-n">Best Employee &amp; Tutor Recognition</div>
-      <div class="award-org">Educational Success Center</div>
-      <p class="award-d">Honored for exceptional commitment leading 10+ peer tutors and improving student outcomes.</p>
-    </div>
-    <div class="award-card">
-      <div class="award-yr">Capstone</div>
-      <div class="award-n">Seniotr Capstone &amp;Recognition</div>
-      <div class="award-org">UW-Superior CS Department</div>
-      <p class="award-d">Recognized for the Course Scheduling Intelligence System at departmental capstone review.</p>
-    </div>
-  </div>
-</section>
-
-<hr class="divider">
-
-<!-- ABOUT -->
-<section class="section" id="about">
-  <div class="section-head">
-    <span class="section-n">05</span>
-    <h2 class="section-title">About Me</h2>
-  </div>
-  <div class="about-grid">
-    <div class="about-text">
-      <p>I started coding because I wanted to build things that mattered. That hasn't changed.</p>
-      <p>I'm a <strong>Computer Science student</strong> at the University of Wisconsin – Superior, graduating May 2026. I design and ship full-stack applications, machine learning systems, and automation tools across the entire stack — from React dashboards and FastAPI backends to ML pipelines, SQLite databases, Flutter mobile apps, and quantum classifiers.</p>
-      <p>Outside of code I lead. I served as <strong>President of the Mathematics & Computer Science Club</strong>, organized the department's first hackathon, worked as a Tutor Cohort Leader, Student Ambassador, Resident Assistant, and Peer Mentor. The best engineers lift the people around them. That part matters to me just as much as the code.</p>
-      <p>Currently deepening my work in AI application development, data engineering, and quantum ML with Qiskit. Always looking for the next hard problem worth solving.</p>
-    </div>
-    <div class="about-blocks">
-      <div class="about-block">
-        <div class="ab-title">Education</div>
-        <div class="ab-body">B.S. Computer Science · May 2026<br>University of Wisconsin – Superior<br>Dean's List · Academic Excellence Award<br>STEM Recognition Award</div>
-      </div>
-      <div class="about-block">
-        <div class="ab-title">Leadership</div>
-        <div class="ab-body">President, Math &amp; CS Club<br>2× Programming Competition Winner<br>Hackathon Group Lead<br>Tutor Cohort Leader · 10+ peer tutors<br>Resident Assistant · Student Ambassador</div>
-      </div>
-      <div class="about-block">
-        <div class="ab-title">Currently exploring</div>
-        <div class="ab-body">Quantum ML with Qiskit &amp; CUDA-Q<br>AI application development<br>Full-stack systems at scale<br>Open to new grad roles &amp; collaborations</div>
+      <div class="id-card hud">
+        <div class="id-head"><span>ID_CARD.SYS</span><div class="id-dots"><i></i><i></i><i></i></div></div>
+        <div class="photo-frame">
+          <div class="photo-ring"></div>
+          <div class="photo-hex">
+            <img src="Kerima_Photo.jpg" alt="Kerima Mussa">
+          </div>
+        </div>
+        <div class="id-meta">
+          <div class="id-row"><span class="k">Role</span><span class="v">SWE / AI-ML</span></div>
+          <div class="id-row"><span class="k">Location</span><span class="v">New Haven, CT</span></div>
+          <div class="id-row"><span class="k">Availability</span><span class="v">Jun 2026</span></div>
+          <div class="id-row"><span class="k">Clearance</span><span class="v">Open to relocate</span></div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+    <div class="scroll-hint">scroll <span class="chev">▾</span></div>
+  </section>
 
-<hr class="divider">
+  <section class="slide" id="slide-skills" data-slide="1">
+    <div class="slide-inner">
+      <div class="section-head"><span class="section-n">01</span><h2 class="section-title">Technical Skills</h2><div class="section-rule"></div></div>
+      <div class="skills-grid">
+        <div class="skill-cell">
+          <div class="skill-cat">Languages</div>
+          <div class="skill-tags">
+            <span class="tag">Python</span><span class="tag">JavaScript</span>
+            <span class="tag">Java</span><span class="tag">SQL</span>
+            <span class="tag">C++</span><span class="tag">HTML/CSS</span>
+            <span class="tag">Dart</span>
+          </div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cat">Frameworks</div>
+          <div class="skill-tags">
+            <span class="tag">React</span><span class="tag">FastAPI</span>
+            <span class="tag">Flask</span><span class="tag">Flutter</span>
+            <span class="tag">LangChain</span><span class="tag">Node.js</span>
+            <span class="tag">NumPy</span><span class="tag">Pandas</span>
+          </div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cat">Data &amp; Cloud</div>
+          <div class="skill-tags">
+            <span class="tag">PostgreSQL</span><span class="tag">SQLite</span>
+            <span class="tag">Power BI</span><span class="tag">Firebase</span>
+            <span class="tag">Google Cloud</span><span class="tag">Docker</span>
+            <span class="tag">Supabase</span>
+          </div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cat">AI / ML</div>
+          <div class="skill-tags">
+            <span class="tag">scikit-learn</span><span class="tag">Qiskit</span>
+            <span class="tag">ML pipelines</span><span class="tag">Predictive modeling</span>
+            <span class="tag">NLP</span><span class="tag">Selenium</span>
+            <span class="tag">Git</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- CONTACT -->
-<section class="section" id="contact">
-  <div class="section-head">
-    <span class="section-n">06</span>
-    <h2 class="section-title">Get in Touch</h2>
-  </div>
-  <div class="contact-row">
-    <div class="contact-item">
-      <div class="c-label">Email</div>
-      <a href="mailto:kmussa2025@gmail.com" class="c-val">kmussa2025@gmail.com</a>
+  <section class="slide" id="slide-experience" data-slide="2">
+    <div class="slide-inner">
+      <div class="section-head"><span class="section-n">02</span><h2 class="section-title">Work Experience</h2><div class="section-rule"></div></div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div>
+            <div class="tl-co">GAO Tek Inc.</div>
+            <div class="tl-date">Jun – Sep 2025</div>
+          </div>
+          <div>
+            <div class="tl-role">AI &amp; Web Developer Intern</div>
+            <p class="tl-desc">Engineered production-grade RESTful APIs and backend services supporting web applications used across global engineering teams. Deployed AI-powered pipelines automating documentation generation, summarization, and code annotation at scale using LangChain and Python.</p>
+            <div class="badges"><span class="badge">Python</span><span class="badge">LangChain</span><span class="badge">React</span><span class="badge">REST APIs</span><span class="badge">Flask</span></div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div>
+            <div class="tl-co">Sheraton Duluth Hotel</div>
+            <div class="tl-date">Jan 2025 – Mar 2026</div>
+          </div>
+          <div>
+            <div class="tl-role">Software Systems Intern</div>
+            <p class="tl-desc">Designed Python-based data processing pipelines and automated reporting systems, reducing manual data handling time by 30%. Built performance dashboards monitoring guest satisfaction scores and key operational metrics in real time.</p>
+            <div class="badges"><span class="badge">Python</span><span class="badge">SQL</span><span class="badge">Automation</span><span class="badge">Dashboards</span></div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div>
+            <div class="tl-co">UW-Superior Link Center</div>
+            <div class="tl-date">May 2024 – Oct 2025</div>
+          </div>
+          <div>
+            <div class="tl-role">Research Assistant — Data &amp; Policy</div>
+            <p class="tl-desc">Led end-to-end data collection, cleaning, and multi-source integration to model the impact of federal funding changes across Northeast Minnesota communities. Applied EDA and statistical techniques to surface actionable trends for stakeholder reports.</p>
+            <div class="badges"><span class="badge">Python</span><span class="badge">Statistical analysis</span><span class="badge">EDA</span><span class="badge">Data integration</span></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="contact-item">
-      <div class="c-label">LinkedIn</div>
-      <a href="https://linkedin.com/in/kerima-mussa-a72735277" target="_blank" class="c-val">linkedin.com/in/kerima-mussa</a>
-    </div>
-    <div class="contact-item">
-      <div class="c-label">GitHub</div>
-      <a href="https://github.com/Kerima-001" target="_blank" class="c-val">github.com/Kerima-001</a>
-    </div>
-  </div>
-</section>
+  </section>
 
-<footer>
-  <span class="footer-name">Kerima Mussa</span>
-  <span>B.S. Computer Science · UW-Superior · Available June 2026</span>
-</footer>
+  <section class="slide" id="slide-projects" data-slide="3">
+    <div class="slide-inner">
+      <div class="section-head"><span class="section-n">03</span><h2 class="section-title">Selected Projects</h2><div class="section-rule"></div></div>
+      <div class="proj-grid">
+        <a href="https://github.com/Kerima-001/RententionIQ-Pro" target="_blank" class="proj-card">
+          <div class="proj-arrow">↗</div>
+          <div class="proj-n">PYTHON · REACT · FASTAPI · QISKIT</div>
+          <div class="proj-name">RetentionIQ Pro</div>
+          <p class="proj-desc">Predicts customer churn before it happens. Live React dashboard with slider-driven predictions, signal breakdown bars, and personalized retention recommendations. Includes an experimental Qiskit quantum classifier.</p>
+          <div class="badges"><span class="badge">Python</span><span class="badge">React</span><span class="badge">SQLite</span><span class="badge">Qiskit</span></div>
+        </a>
+        <a href="https://github.com/Kerima-001/Eco_Sense_Ai" target="_blank" class="proj-card">
+          <div class="proj-arrow">↗</div>
+          <div class="proj-n">PYTHON · SIGNAL PROCESSING</div>
+          <div class="proj-name">Eco Sense AI</div>
+          <p class="proj-desc">Listens to a room and tells you how much energy it's wasting. Uses microphone audio, FFT, RMS, and zero-crossing rate to estimate occupancy, HVAC load, and CO₂ output in real time.</p>
+          <div class="badges"><span class="badge">Python</span><span class="badge">NumPy</span><span class="badge">FFT</span></div>
+        </a>
+        <a href="https://github.com/Kerima-001/Campus-Safety-Alert" target="_blank" class="proj-card">
+          <div class="proj-arrow">↗</div>
+          <div class="proj-n">FLUTTER · FASTAPI · FIREBASE</div>
+          <div class="proj-name">Campus Safety Alert App</div>
+          <p class="proj-desc">One-tap SOS, real-time emergency alerts, and live campus safety mapping for universities. Sends location-aware notifications based on proximity to an incident.</p>
+          <div class="badges"><span class="badge">Flutter</span><span class="badge">FastAPI</span><span class="badge">PostgreSQL</span><span class="badge">Firebase</span></div>
+        </a>
+        <a href="https://github.com/Kerima-001/DeptOpsToolkit" target="_blank" class="proj-card">
+          <div class="proj-arrow">↗</div>
+          <div class="proj-n">PYTHON · FASTAPI · CHART.JS</div>
+          <div class="proj-name">Department Operations Platform</div>
+          <p class="proj-desc">Enterprise admin system for academic departments — budgets, faculty, courses, equipment inventory, research grants, and analytics dashboards, built to simulate real university operations software.</p>
+          <div class="badges"><span class="badge">Python</span><span class="badge">FastAPI</span><span class="badge">SQLAlchemy</span><span class="badge">Chart.js</span></div>
+        </a>
+        <a href="https://github.com/Kerima-001/AI-Doc" target="_blank" class="proj-card">
+          <div class="proj-arrow">↗</div>
+          <div class="proj-n">LANGCHAIN · FLASK · NLP</div>
+          <div class="proj-name">AI Documentation System</div>
+          <p class="proj-desc">Automates the part of engineering nobody wants to do. Generates docs, summarizes codebases, and annotates functions so teams can focus on shipping features instead of writing documentation.</p>
+          <div class="badges"><span class="badge">LangChain</span><span class="badge">Flask</span><span class="badge">Python</span><span class="badge">NLP</span></div>
+        </a>
+        <a href="https://github.com/Kerima-001/Capstone-Project" target="_blank" class="proj-card">
+          <div class="proj-arrow">↗</div>
+          <div class="proj-n">PYTHON · SELENIUM · REST APIS</div>
+          <div class="proj-name">Course Scheduling Intelligence</div>
+          <p class="proj-desc">Senior capstone. Scrapes live course data and recommends the right courses based on a student's history, degree requirements, and scheduling constraints.</p>
+          <div class="badges"><span class="badge">Python</span><span class="badge">Selenium</span><span class="badge">REST APIs</span><span class="badge">Automation</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-awards" data-slide="4">
+    <div class="slide-inner">
+      <div class="section-head"><span class="section-n">04</span><h2 class="section-title">Awards &amp; Recognition</h2><div class="section-rule"></div></div>
+      <div class="awards-list">
+        <div class="award-row">
+          <div class="award-yr">2× WIN</div>
+          <div class="award-n">Programming Competition Winner</div>
+          <div class="award-org">Math &amp; CS Club</div>
+          <p class="award-d">Won the annual competition twice in algorithmic problem-solving and software challenges.</p>
+        </div>
+        <div class="award-row">
+          <div class="award-yr">MULTI-TERM</div>
+          <div class="award-n">Dean's List &amp; Academic Excellence</div>
+          <div class="award-org">UW-Superior</div>
+          <p class="award-d">Recognized on the Dean's List across multiple academic terms for outstanding CS performance.</p>
+        </div>
+        <div class="award-row">
+          <div class="award-yr">25–26</div>
+          <div class="award-n">TMCF Scholar</div>
+          <div class="award-org">Thurgood Marshall College Fund</div>
+          <p class="award-d">Selected for academic excellence and leadership potential in STEM fields.</p>
+        </div>
+        <div class="award-row">
+          <div class="award-yr">2025</div>
+          <div class="award-n">Hackathon Group Lead Award</div>
+          <div class="award-org">Madhacks 2025</div>
+          <p class="award-d">Recognized as Group Lead for delivering a working technical solution under time constraints.</p>
+        </div>
+        <div class="award-row">
+          <div class="award-yr">ESC</div>
+          <div class="award-n">Best Employee &amp; Tutor Recognition</div>
+          <div class="award-org">Educational Success Center</div>
+          <p class="award-d">Honored for exceptional commitment leading 10+ peer tutors and improving student outcomes.</p>
+        </div>
+        <div class="award-row">
+          <div class="award-yr">CAPSTONE</div>
+          <div class="award-n">Senior Capstone Recognition</div>
+          <div class="award-org">UW-Superior CS Dept.</div>
+          <p class="award-d">Recognized for the Course Scheduling Intelligence System at departmental capstone review.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-about" data-slide="5">
+    <div class="slide-inner">
+      <div class="section-head"><span class="section-n">05</span><h2 class="section-title">About Me</h2><div class="section-rule"></div></div>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>I started coding because I wanted to build things that mattered. That hasn't changed.</p>
+          <p>I'm a <strong>Computer Science student</strong> at the University of Wisconsin – Superior, graduating May 2026. I design and ship full-stack applications, machine learning systems, and automation tools — from React dashboards and FastAPI backends to ML pipelines, SQLite databases, Flutter mobile apps, and quantum classifiers.</p>
+          <p>Outside of code I lead. I served as <strong>President of the Mathematics &amp; Computer Science Club</strong>, organized the department's first hackathon, and worked as a Tutor Cohort Leader, Student Ambassador, Resident Assistant, and Peer Mentor. The best engineers lift the people around them — that part matters to me just as much as the code.</p>
+          <p>Currently deepening my work in AI application development, data engineering, and quantum ML with Qiskit. Always looking for the next hard problem worth solving.</p>
+        </div>
+        <div class="about-blocks">
+          <div class="about-block hud">
+            <div class="ab-title">Education</div>
+            <div class="ab-body">B.S. Computer Science · May 2026<br>University of Wisconsin – Superior<br>Dean's List · Academic Excellence Award<br>STEM Recognition Award</div>
+          </div>
+          <div class="about-block hud">
+            <div class="ab-title">Leadership</div>
+            <div class="ab-body">President, Math &amp; CS Club<br>2× Programming Competition Winner<br>Hackathon Group Lead<br>Tutor Cohort Leader · 10+ peer tutors<br>Resident Assistant · Student Ambassador</div>
+          </div>
+          <div class="about-block hud">
+            <div class="ab-title">Currently exploring</div>
+            <div class="ab-body">Quantum ML with Qiskit &amp; CUDA-Q<br>AI application development<br>Full-stack systems at scale<br>Open to new grad roles &amp; collaborations</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-contact" data-slide="6">
+    <div class="slide-inner">
+      <div class="section-head"><span class="section-n">06</span><h2 class="section-title">Get in Touch</h2><div class="section-rule"></div></div>
+      <div class="contact-row">
+        <div class="contact-item hud">
+          <div class="c-label">Email</div>
+          <a href="mailto:kmussa2025@gmail.com" class="c-val">kmussa2025@gmail.com</a>
+        </div>
+        <div class="contact-item hud">
+          <div class="c-label">LinkedIn</div>
+          <a href="https://linkedin.com/in/kerima-mussa-a72735277" target="_blank" class="c-val">linkedin.com/in/kerima-mussa</a>
+        </div>
+        <div class="contact-item hud">
+          <div class="c-label">GitHub</div>
+          <a href="https://github.com/Kerima-001" target="_blank" class="c-val">github.com/Kerima-001</a>
+        </div>
+      </div>
+      <div class="deck-footer">
+        <span class="footer-name">KERIMA_MUSSA.SYS</span>
+        <span>B.S. Computer Science · UW-Superior · Available June 2026</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  var deck = document.getElementById('deck');
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var total = slides.length;
+  var current = 0;
+
+  var dotsWrap = document.getElementById('deck-dots');
+  var labels = ['Intro','Skills','Experience','Projects','Awards','About','Contact'];
+  slides.forEach(function(s,i){
+    var b = document.createElement('button');
+    b.setAttribute('aria-label','Go to '+labels[i]);
+    var tip = document.createElement('span');
+    tip.className = 'tip'; tip.textContent = labels[i];
+    b.appendChild(tip);
+    b.addEventListener('click', function(){ goTo(i); });
+    dotsWrap.appendChild(b);
+  });
+  var dotBtns = dotsWrap.querySelectorAll('button');
+
+  document.getElementById('count-tot').textContent = String(total).padStart(2,'0');
+
+  function goTo(i){
+    i = Math.max(0, Math.min(total-1, i));
+    slides[i].scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  function updateActive(i){
+    current = i;
+    dotBtns.forEach(function(b,j){ b.classList.toggle('active', j===i); });
+    document.querySelectorAll('.nav-links button').forEach(function(b){
+      b.classList.toggle('active', Number(b.dataset.target)===i);
+    });
+    document.getElementById('count-cur').textContent = String(i+1).padStart(2,'0');
+    document.getElementById('prev-btn').disabled = (i===0);
+    document.getElementById('next-btn').disabled = (i===total-1);
+    document.getElementById('progress-rail').style.width = (((i+1)/total)*100)+'%';
+  }
+
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting && entry.intersectionRatio > 0.55){
+        updateActive(Number(entry.target.dataset.slide));
+      }
+    });
+  }, {root:deck, threshold:[0,0.55,1]});
+  slides.forEach(function(s){ io.observe(s); });
+
+  document.querySelectorAll('.nav-links button').forEach(function(b){
+    b.addEventListener('click', function(){ goTo(Number(b.dataset.target)); });
+  });
+
+  document.getElementById('prev-btn').addEventListener('click', function(){ goTo(current-1); });
+  document.getElementById('next-btn').addEventListener('click', function(){ goTo(current+1); });
+
+  window.addEventListener('keydown', function(e){
+    if(e.key==='ArrowDown' || e.key==='PageDown'){ e.preventDefault(); goTo(current+1); }
+    else if(e.key==='ArrowUp' || e.key==='PageUp'){ e.preventDefault(); goTo(current-1); }
+    else if(e.key===' '){ e.preventDefault(); goTo(current+1); }
+    else if(e.key==='Home'){ goTo(0); }
+    else if(e.key==='End'){ goTo(total-1); }
+  });
+
+  updateActive(0);
+
+  var canvas = document.getElementById('net-canvas');
+  var ctx = canvas.getContext('2d');
+  var heroSlide = document.getElementById('slide-hero');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W,H,nodes=[];
+  function resize(){
+    W = canvas.width = heroSlide.offsetWidth;
+    H = canvas.height = heroSlide.offsetHeight;
+  }
+  function initNet(){
+    resize();
+    var count = Math.max(16, Math.floor(W/100));
+    nodes = [];
+    for(var i=0;i<count;i++){
+      nodes.push({ x: Math.random()*W, y: Math.random()*H, vx:(Math.random()-0.5)*0.18, vy:(Math.random()-0.5)*0.18 });
+    }
+  }
+  function stepNet(){
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<nodes.length;i++){
+      var n = nodes[i];
+      if(!reduced){ n.x+=n.vx; n.y+=n.vy; }
+      if(n.x<0||n.x>W) n.vx*=-1;
+      if(n.y<0||n.y>H) n.vy*=-1;
+    }
+    for(var i=0;i<nodes.length;i++){
+      for(var j=i+1;j<nodes.length;j++){
+        var a=nodes[i], b=nodes[j];
+        var dx=a.x-b.x, dy=a.y-b.y, dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<160){
+          ctx.strokeStyle = 'rgba(75,232,212,'+(0.14*(1-dist/160))+')';
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+        }
+      }
+    }
+    for(var i=0;i<nodes.length;i++){
+      ctx.beginPath(); ctx.arc(nodes[i].x,nodes[i].y,1.6,0,Math.PI*2);
+      ctx.fillStyle = 'rgba(139,124,246,0.55)'; ctx.fill();
+    }
+    if(!reduced) requestAnimationFrame(stepNet);
+  }
+  window.addEventListener('resize', function(){ resize(); });
+  initNet(); stepNet();
+})();
+</script>
 
 </body>
 </html>
