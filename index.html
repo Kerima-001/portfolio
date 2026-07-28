@@ -134,6 +134,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:99;display:flex;justify-content:
 .photo-ring::after{bottom:-3px;left:50%;transform:translateX(-50%)}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .photo-hex{position:relative;width:100%;aspect-ratio:1/1;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 32% 26%,#fff,#eef1f7 45%,#e2e7f2 100%);border:1px solid var(--line-hi);z-index:2;box-shadow:0 16px 40px rgba(92,107,133,.18);display:flex;align-items:center;justify-content:center}
+.photo-hex img{width:100%;height:100%;object-fit:cover;object-position:center top;position:relative;z-index:2}
 .photo-hex .initials{font-family:var(--display);font-weight:700;font-size:3.2rem;letter-spacing:-.02em;background:linear-gradient(135deg,var(--coral),var(--pink) 55%,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent;z-index:2}
 .photo-hex .scan{position:absolute;left:0;right:0;height:45%;background:linear-gradient(180deg,transparent,rgba(255,255,255,.55),transparent);animation:scan 3.4s ease-in-out infinite;z-index:1}
 @keyframes scan{0%{top:-45%}100%{top:100%}}
@@ -293,7 +294,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:99;display:flex;justify-content:
         <div class="id-head"><span>ID_CARD.SYS</span><div class="id-dots"><i></i><i></i><i></i></div></div>
         <div class="photo-frame">
           <div class="photo-ring"></div>
-          <div class="photo-hex"><div class="scan"></div><div class="initials">KM</div></div>
+          <div class="photo-hex"><div class="scan"></div><img src="https://raw.githubusercontent.com/Kerima-001/portfolio/main/Kerima_Photo.jpg" alt="Kerima Mussa" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'initials',textContent:'KM'}))"></div>
         </div>
         <div class="id-meta">
           <div class="id-row"><span class="k">Role</span><span class="v">SWE / AI-ML</span></div>
