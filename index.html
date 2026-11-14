@@ -1,853 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kerima Mussa - Software Engineer</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kerima Mussa — Business Analyst &amp; Data Operations</title>
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#f5f6f9;
-  --bg2:#ffffff;
-  --panel:rgba(255,255,255,.78);
-  --panel-hi:rgba(255,255,255,.96);
-  --line:rgba(15,23,42,.08);
-  --line-hi:rgba(15,23,42,.14);
-  --coral:#2955c9;
-  --coral-dim:#3d67d6;
-  --violet:#1c2740;
-  --pink:#4a6bd6;
-  --mint:#5c6b85;
-  --amber:#93763f;
-  --text:#161b26;
-  --muted:#5a6272;
-  --muted-dim:#8991a1;
-  --display:'Space Grotesk',sans-serif;
-  --sans:'Inter',sans-serif;
-  --mono:'JetBrains Mono',monospace;
-  --r-lg:28px;
-  --r-md:20px;
-  --r-sm:14px;
-}
-html,body{height:100%}
-@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
-
-body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;overflow:hidden}
-
-.bubble-field{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.bubble{position:absolute;border-radius:50%;filter:blur(2px);opacity:.32;animation:drift linear infinite}
-.bubble.b-glass{background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.9),rgba(255,255,255,.15) 55%,rgba(255,255,255,0) 72%);border:1px solid rgba(255,255,255,.6);box-shadow:inset 0 0 20px rgba(255,255,255,.5),0 10px 30px rgba(92,107,133,.10)}
-@keyframes drift{
-  0%{transform:translateY(0) translateX(0) scale(1)}
-  50%{transform:translateY(-38px) translateX(18px) scale(1.04)}
-  100%{transform:translateY(0) translateX(0) scale(1)}
-}
-.bg-glow{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 1000px 700px at 12% -6%,rgba(41,85,201,.07),transparent 60%),radial-gradient(ellipse 900px 700px at 95% 6%,rgba(28,39,64,.06),transparent 60%),radial-gradient(ellipse 800px 650px at 45% 108%,rgba(41,85,201,.05),transparent 60%)}
-
-::selection{background:var(--coral);color:#fff}
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--line-hi);border-radius:10px}
-::-webkit-scrollbar-thumb:hover{background:var(--violet)}
-
-.hud{position:relative;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:var(--r-lg);box-shadow:0 12px 34px rgba(35,39,68,.07)}
-
-nav{position:fixed;top:0;left:0;right:0;z-index:99;display:flex;justify-content:space-between;align-items:center;padding:.85rem 3rem;background:rgba(251,248,245,.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
-.nav-logo{font-family:var(--mono);font-size:.85rem;letter-spacing:.02em;color:var(--text);display:flex;align-items:center;gap:.55rem}
-.nav-logo .dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--pink));box-shadow:0 0 10px rgba(41,85,201,.6);animation:blink 2.4s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
-.nav-links{display:flex;gap:.4rem;list-style:none}
-.nav-links button{background:none;border:none;cursor:pointer;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);transition:all .2s;padding:.5rem .85rem;border-radius:999px}
-.nav-links button:hover{color:var(--text);background:rgba(92,107,133,.08)}
-.nav-links button.active{color:#fff;background:linear-gradient(120deg,var(--coral),var(--violet))}
-.nav-status{display:flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:10px;color:var(--muted-dim);letter-spacing:.05em}
-
-.progress-rail{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--coral),var(--pink),var(--violet));z-index:100;border-radius:0 3px 3px 0;transition:width .5s cubic-bezier(.4,0,.2,1)}
-
-#deck{height:100vh;overflow:hidden;position:relative;z-index:1}
-.slide{
-  position:absolute;inset:0;height:100vh;
-  display:flex;flex-direction:column;justify-content:center;
-  padding:96px 3rem 70px;
-  opacity:0;pointer-events:none;
-  transform:translateY(46px) scale(.975);
-  transition:opacity .55s cubic-bezier(.22,.68,.35,1),transform .55s cubic-bezier(.22,.68,.35,1);
-  will-change:transform,opacity;
-}
-.slide.is-active{opacity:1;pointer-events:auto;transform:translateY(0) scale(1);z-index:3}
-.slide.is-exit-up{opacity:0;transform:translateY(-46px) scale(.975);z-index:2}
-.slide.is-exit-down{opacity:0;transform:translateY(46px) scale(.975);z-index:2}
-.slide-inner{max-width:1180px;margin:0 auto;width:100%;max-height:calc(100vh - 166px);overflow-y:auto;padding-right:4px}
-
-.deck-dots{position:fixed;right:1.6rem;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:.72rem;align-items:center}
-.deck-dots button{width:9px;height:9px;border-radius:50%;background:var(--line-hi);border:none;cursor:pointer;padding:0;transition:all .25s;position:relative}
-.deck-dots button.active{background:linear-gradient(135deg,var(--coral),var(--violet));box-shadow:0 0 10px rgba(41,85,201,.5);transform:scale(1.35)}
-.deck-dots button:hover{background:var(--violet)}
-.deck-dots .tip{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap;background:var(--bg2);border:1px solid var(--line);padding:3px 10px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .2s;box-shadow:0 6px 16px rgba(35,39,68,.08)}
-.deck-dots button:hover .tip{opacity:1}
-
-.deck-controls{position:fixed;bottom:1.6rem;right:1.8rem;z-index:100;display:flex;align-items:center;gap:.9rem;font-family:var(--mono)}
-.deck-count{font-size:11px;color:var(--muted-dim);letter-spacing:.04em}
-.deck-count .cur{color:var(--coral)}
-.arrow-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--line-hi);background:var(--bg2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:14px;box-shadow:0 6px 16px rgba(35,39,68,.08)}
-.arrow-btn:hover{border-color:var(--coral);color:var(--coral);box-shadow:0 6px 20px rgba(41,85,201,.25)}
-.arrow-btn:disabled{opacity:.3;cursor:default}
-.arrow-btn:disabled:hover{border-color:var(--line-hi);color:var(--text);box-shadow:0 6px 16px rgba(35,39,68,.08)}
-.arrow-btn:focus-visible,.nav-links button:focus-visible,.deck-dots button:focus-visible,.tag:focus-visible,.proj-card:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
-
-#slide-hero{padding-top:96px}
-.hero-grid{display:grid;grid-template-columns:1fr 380px;align-items:center;gap:4rem;max-width:1180px;margin:0 auto;width:100%}
-#net-canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.5;pointer-events:none}
-.hero-eyebrow{font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:1.4rem;display:flex;align-items:center;gap:.7rem}
-.hero-eyebrow::before{content:'✦';color:var(--violet)}
-.hero h1{font-family:var(--display);font-weight:700;font-size:clamp(2.6rem,5.4vw,4.6rem);line-height:1.02;letter-spacing:-.02em;margin-bottom:.6rem;background:linear-gradient(120deg,var(--text) 30%,var(--coral) 65%,var(--violet) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-.cursor{display:inline-block;width:.5em;height:.85em;background:var(--coral);border-radius:2px;margin-left:4px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
-.hero-sub{font-size:.92rem;color:var(--muted);max-width:460px;line-height:1.85;margin:1.3rem 0 2rem;font-weight:300}
-.hero-cta{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:2.4rem}
-.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.65rem;font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.04em;text-decoration:none;transition:all .2s;border:1px solid;border-radius:999px}
-.btn-solid{background:linear-gradient(120deg,var(--coral),var(--pink) 60%,var(--violet));color:#ffffff;border-color:transparent;box-shadow:0 10px 26px rgba(41,85,201,.28)}
-.btn-solid:hover{filter:brightness(1.06);box-shadow:0 12px 30px rgba(41,85,201,.38);transform:translateY(-1px)}
-.btn-ghost{background:var(--bg2);color:var(--text);border-color:var(--line-hi)}
-.btn-ghost:hover{border-color:var(--violet);color:var(--violet);box-shadow:0 8px 20px rgba(92,107,133,.15)}
-.hero-stats{display:flex;gap:0;border-top:1px solid var(--line);padding-top:1.5rem;flex-wrap:wrap}
-.stat{padding-right:2.1rem;margin-right:2.1rem;border-right:1px solid var(--line)}
-.stat:last-child{border-right:none;margin-right:0;padding-right:0}
-.stat-val{font-family:var(--display);font-size:1.7rem;font-weight:600;color:var(--coral);line-height:1}
-.stat-lbl{font-family:var(--mono);font-size:9.5px;color:var(--muted-dim);margin-top:.3rem;letter-spacing:.05em;text-transform:uppercase}
-.scroll-hint{position:absolute;bottom:1.8rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;font-family:var(--mono);font-size:10px;color:var(--muted-dim);letter-spacing:.08em;text-transform:uppercase;background:none;border:none;cursor:pointer;transition:color .2s}
-.scroll-hint:hover{color:var(--coral)}
-.scroll-hint .chev{animation:bob 1.8s infinite;color:var(--coral)}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
-
-.id-card{padding:0;overflow:hidden}
-.id-head{display:flex;justify-content:space-between;align-items:center;padding:.7rem 1rem;border-bottom:1px solid var(--line);background:rgba(92,107,133,.05)}
-.id-head span{font-family:var(--mono);font-size:10px;color:var(--muted-dim);letter-spacing:.05em}
-.id-dots{display:flex;gap:5px}
-.id-dots i{width:7px;height:7px;border-radius:50%;background:var(--line-hi);display:block}
-.photo-frame{position:relative;padding:1.8rem}
-.photo-ring{position:absolute;inset:8px;border-radius:50%;border:1px dashed rgba(92,107,133,.4);animation:spin 24s linear infinite;pointer-events:none;z-index:1}
-.photo-ring::before,.photo-ring::after{content:'';position:absolute;width:6px;height:6px;border-radius:50%;background:var(--coral);box-shadow:0 0 8px rgba(41,85,201,.6)}
-.photo-ring::before{top:-3px;left:50%;transform:translateX(-50%)}
-.photo-ring::after{bottom:-3px;left:50%;transform:translateX(-50%)}
-@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.photo-hex{position:relative;width:100%;aspect-ratio:1/1;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 32% 26%,#fff,#eef1f7 45%,#e2e7f2 100%);border:1px solid var(--line-hi);z-index:2;box-shadow:0 16px 40px rgba(92,107,133,.18);display:flex;align-items:center;justify-content:center}
-.photo-hex img{width:100%;height:100%;object-fit:cover;object-position:center top;position:relative;z-index:2}
-.photo-hex .initials{font-family:var(--display);font-weight:700;font-size:3.2rem;letter-spacing:-.02em;background:linear-gradient(135deg,var(--coral),var(--pink) 55%,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent;z-index:2}
-.photo-hex .scan{position:absolute;left:0;right:0;height:45%;background:linear-gradient(180deg,transparent,rgba(255,255,255,.55),transparent);animation:scan 3.4s ease-in-out infinite;z-index:1}
-@keyframes scan{0%{top:-45%}100%{top:100%}}
-.id-meta{padding:.2rem 1.4rem 1.4rem}
-.id-row{display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px dashed var(--line);font-family:var(--mono);font-size:11px}
-.id-row:last-child{border-bottom:none}
-.id-row .k{color:var(--muted-dim);text-transform:uppercase;letter-spacing:.05em}
-.id-row .v{color:var(--coral);font-weight:600}
-
-.section-head{display:flex;align-items:baseline;gap:1rem;margin-bottom:2.4rem}
-.section-n{font-family:var(--mono);font-size:11px;color:var(--coral);font-weight:600}
-.section-title{font-family:var(--display);font-size:1.75rem;font-weight:600;letter-spacing:-.01em}
-.section-sub{font-family:var(--mono);font-size:11px;color:var(--muted-dim);margin:-1.8rem 0 2rem 0}
-.section-rule{flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
-
-.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
-.skill-cell{background:var(--panel);padding:1.5rem;transition:all .2s;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:var(--r-md);border:1px solid var(--line);box-shadow:0 10px 26px rgba(35,39,68,.06)}
-.skill-cell:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(92,107,133,.14)}
-.skill-cat{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--violet);margin-bottom:.9rem}
-.skill-tags{display:flex;flex-wrap:wrap;gap:.45rem}
-.tag{font-family:var(--mono);font-size:11.5px;padding:5px 12px;border:1px solid var(--line-hi);color:var(--muted);background:var(--bg2);border-radius:999px;transition:all .15s}
-.tag:hover{color:#fff;border-color:transparent;background:linear-gradient(120deg,var(--coral),var(--violet));box-shadow:0 6px 16px rgba(41,85,201,.25)}
-
-.exp-tabs{display:flex;gap:.5rem;margin-bottom:1.8rem;flex-wrap:wrap}
-.exp-tab{font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding:.6rem 1.2rem;border:1px solid var(--line-hi);background:var(--bg2);color:var(--muted);cursor:pointer;transition:all .15s;border-radius:999px}
-.exp-tab:hover{color:var(--violet);border-color:var(--violet)}
-.exp-tab.active{color:#fff;background:linear-gradient(120deg,var(--coral),var(--violet));border-color:transparent;box-shadow:0 8px 20px rgba(41,85,201,.22)}
-.exp-group{display:none}
-.exp-group.active{display:block}
-
-.timeline{position:relative;padding-left:2px}
-.timeline::before{content:'';position:absolute;left:5px;top:8px;bottom:8px;width:2px;border-radius:2px;background:linear-gradient(180deg,var(--coral),var(--violet) 60%,var(--line) 95%)}
-.tl-item{display:grid;grid-template-columns:170px 1fr;gap:2.2rem;padding:0 0 2.1rem 2.6rem;position:relative}
-.tl-item:last-child{padding-bottom:0}
-.tl-item::before{content:'';position:absolute;left:0;top:5px;width:12px;height:12px;border-radius:50%;border:3px solid var(--coral);background:var(--bg2);box-shadow:0 0 0 4px rgba(41,85,201,.15)}
-.tl-co{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--text);letter-spacing:.01em}
-.tl-date{font-size:11px;color:var(--muted-dim);margin-top:.25rem;font-family:var(--mono)}
-.tl-role{font-family:var(--display);font-size:1.1rem;font-weight:600;margin-bottom:.5rem;color:var(--violet)}
-.tl-desc{font-size:.84rem;color:var(--muted);line-height:1.75;margin-bottom:.85rem;font-weight:300}
-.badges{display:flex;flex-wrap:wrap;gap:.4rem}
-.badge{font-size:10.5px;padding:3px 11px;background:rgba(92,107,133,.08);border:1px solid var(--line-hi);color:var(--muted);font-family:var(--mono);border-radius:999px}
-
-.proj-top{display:flex;align-items:center;gap:.65rem;margin-bottom:1rem}
-.proj-index{font-family:var(--mono);font-size:10.5px;font-weight:700;color:#fff;background:var(--coral);padding:3px 10px;border-radius:999px;letter-spacing:.03em}
-.proj-cat{font-family:var(--mono);font-size:10.5px;color:var(--muted-dim);text-transform:uppercase;letter-spacing:.06em}
-.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
-.proj-card{background:var(--panel);padding:1.7rem;text-decoration:none;color:inherit;display:block;position:relative;overflow:hidden;transition:all .2s;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:var(--r-md);border:1px solid var(--line);box-shadow:0 10px 26px rgba(35,39,68,.06)}
-.proj-card::before{content:'';position:absolute;top:0;left:1.4rem;right:1.4rem;height:3px;border-radius:0 0 3px 3px;background:linear-gradient(90deg,var(--coral),var(--pink),var(--violet));transform:scaleX(0);transition:transform .3s}
-.proj-card:hover::before{transform:scaleX(1)}
-.proj-card:hover{transform:translateY(-3px);box-shadow:0 18px 36px rgba(92,107,133,.16)}
-.proj-card:hover .proj-arrow{opacity:1;transform:translate(2px,-2px);color:var(--coral)}
-.proj-card:nth-child(3n+2) .proj-index{background:var(--violet)}
-.proj-card:nth-child(3n+3) .proj-index{background:var(--mint)}
-.proj-card:nth-child(3n+2)::before{background:linear-gradient(90deg,var(--violet),var(--coral))}
-.proj-card:nth-child(3n+3)::before{background:linear-gradient(90deg,var(--mint),var(--violet))}
-.proj-arrow{position:absolute;top:1.5rem;right:1.5rem;font-size:.9rem;opacity:.3;transition:all .2s;color:var(--muted)}
-.proj-name{font-family:var(--display);font-size:1.1rem;font-weight:600;margin-bottom:.6rem;color:var(--text)}
-.proj-desc{font-size:.82rem;color:var(--muted);line-height:1.75;margin-bottom:.9rem;font-weight:300}
-
-.cred-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-.cred-card{background:var(--panel);padding:1.4rem 1.5rem;text-decoration:none;color:inherit;display:block;transition:all .2s;position:relative;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:var(--r-md);border:1px solid var(--line);box-shadow:0 10px 26px rgba(35,39,68,.06)}
-.cred-card:hover{transform:translateY(-3px);box-shadow:0 16px 32px rgba(41,85,201,.14)}
-.cred-name{font-family:var(--display);font-size:.94rem;font-weight:600;color:var(--text);line-height:1.35;margin-bottom:.5rem}
-.cred-org{font-family:var(--mono);font-size:11px;color:var(--muted-dim)}
-.cred-skills{margin-top:.6rem;font-size:11px;color:var(--muted);font-family:var(--mono)}
-
-.awards-list{display:flex;flex-direction:column;gap:12px}
-.award-row{background:var(--panel);padding:1.1rem 1.5rem;display:grid;grid-template-columns:90px 1fr auto;gap:1.5rem;align-items:baseline;transition:all .2s;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:var(--r-sm);border:1px solid var(--line);box-shadow:0 8px 20px rgba(35,39,68,.05)}
-.award-row:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(92,107,133,.12)}
-.award-yr{font-family:var(--mono);font-size:11px;color:#fff;background:var(--violet);padding:3px 10px;border-radius:999px;white-space:nowrap}
-.award-n{font-size:.86rem;font-weight:500;color:var(--text)}
-.award-org{font-family:var(--mono);font-size:11px;color:var(--muted-dim);text-align:right;white-space:nowrap}
-.award-d{grid-column:2/4;font-size:.79rem;color:var(--muted);line-height:1.65;font-weight:300;margin-top:.3rem}
-
-.about-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:3.5rem;align-items:start}
-.about-text p{color:var(--muted);line-height:1.85;margin-bottom:.95rem;font-size:.88rem;font-weight:300}
-.about-text p strong{color:var(--violet);font-weight:600}
-.about-blocks{display:flex;flex-direction:column;gap:12px}
-.about-block{background:var(--panel);padding:1.2rem 1.5rem;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:var(--r-md);border:1px solid var(--line);box-shadow:0 10px 26px rgba(35,39,68,.06)}
-.ab-title{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--coral);margin-bottom:.5rem}
-.ab-body{font-size:.8rem;color:var(--muted);line-height:1.8;font-weight:300}
-
-.contact-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:2.4rem}
-.contact-item{background:var(--panel);padding:2rem 1.8rem;transition:all .2s;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:var(--r-md);border:1px solid var(--line);box-shadow:0 10px 26px rgba(35,39,68,.06)}
-.contact-item:hover{transform:translateY(-3px);box-shadow:0 16px 32px rgba(41,85,201,.14)}
-.c-label{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-dim);margin-bottom:.5rem}
-.c-val{font-size:.9rem;color:var(--text);text-decoration:none;font-weight:400}
-.c-val:hover{color:var(--coral)}
-.deck-footer{display:flex;justify-content:space-between;align-items:center;padding-top:1.4rem;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--muted-dim)}
-.footer-name{font-family:var(--display);font-size:.9rem;color:var(--coral);font-weight:600}
-
-@media(max-width:900px){
-  nav{padding:.85rem 1.2rem}
-  .nav-links{display:none}
-  .deck-dots{right:.7rem;gap:.55rem}
-  .deck-dots .tip{display:none}
-  .deck-controls{right:1rem;bottom:1rem}
-  .slide{padding:88px 1.3rem 60px}
-  .slide-inner{max-height:calc(100vh - 148px)}
-  .hero-grid{grid-template-columns:1fr;gap:2rem}
-  .id-card{order:-1;max-width:230px;margin:0 auto}
-  .about-grid,.contact-row{grid-template-columns:1fr}
-  .tl-item{grid-template-columns:1fr;gap:.4rem}
-  .award-row{grid-template-columns:1fr;gap:.3rem}
-  .award-org{text-align:left}
-  .award-d{grid-column:1}
-  .deck-footer{flex-direction:column;gap:.5rem;text-align:center}
-  .hero-stats{flex-wrap:wrap;gap:1rem 0}
-  .stat{padding-right:1.1rem;margin-right:1.1rem}
-}
+:root{--bg:#d8dce2;--card:#d8dce2;--ink:#0b0d12;--mute:#1c2028;--line:#9aa1ad;--acc:#1b4fa8;--acc2:#5d6470;--navy:#0b0d12;--soft:#c7ccd4;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){}
+:root[data-theme="dark"]{--bg:#d8dce2;--card:#d8dce2;--ink:#0b0d12;--mute:#1c2028;--line:#9aa1ad;--acc:#1b4fa8;--acc2:#5d6470;--navy:#0b0d12;--soft:#c7ccd4}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.65 Inter,system-ui,sans-serif}
+h1,h2,h3{font-family:"Space Grotesk",system-ui,sans-serif;margin:0;line-height:1.1}
+a{color:inherit}.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+header.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+header.top .wrap{display:flex;justify-content:space-between;align-items:center;height:60px}
+.logo{font:700 18px "Space Grotesk",sans-serif;text-decoration:none}
+.links a{margin-left:20px;font-size:14px;color:var(--mute);text-decoration:none}.links a:hover{color:var(--acc)}
+.hero{display:grid;grid-template-columns:1fr 300px;gap:56px;align-items:center;padding:76px 0 60px}
+.hero h1{font-size:clamp(44px,7vw,80px);font-weight:700;letter-spacing:-.03em}
+.role{color:var(--acc);font-weight:600;margin:0 0 14px}
+.hero p.sub{color:var(--mute);max-width:54ch;margin:20px 0 26px}
+.btn{display:inline-block;padding:11px 20px;border-radius:8px;font-weight:600;font-size:15px;text-decoration:none;margin:0 8px 8px 0;border:1.5px solid var(--acc)}
+.btn.p{background:var(--acc);color:var(--bg)}.btn.g{color:var(--acc)}
+.photo{aspect-ratio:1;border-radius:50%;overflow:hidden;background:var(--soft);border:1px solid var(--line);display:grid;place-items:center;font:700 64px "Space Grotesk",sans-serif;color:var(--acc)}
+.photo img{width:100%;height:100%;object-fit:cover;object-position:top}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);border-block:1px solid var(--line)}
+.facts div{padding:22px 16px;border-right:1px solid var(--line)}.facts div:last-child{border:0}
+.facts b{display:block;font:700 32px "Space Grotesk",sans-serif;color:var(--acc)}.facts span{font-size:14px;color:var(--mute)}
+section{padding:72px 0 0}
+h2{font-size:clamp(28px,4vw,40px);letter-spacing:-.02em;margin-bottom:26px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;text-decoration:none;display:block}
+a.card:hover{border-color:var(--acc)}
+.card h3{font-size:19px;margin-bottom:8px}.card p{margin:0 0 12px;color:var(--mute);font-size:15px}
+.k{font-size:13px;color:var(--acc);font-weight:600;margin-bottom:6px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}.tags span{font-size:12.5px;padding:3px 10px;border-radius:99px;background:var(--soft);color:var(--navy)}
+.skill h3{font-size:15px;color:var(--mute);margin-bottom:12px;font-weight:500}
+.tabs{display:flex;gap:8px;margin-bottom:24px}
+.tabs button{font:inherit;font-size:15px;padding:8px 18px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--acc);border-color:var(--acc);color:var(--bg)}
+.job{display:grid;grid-template-columns:200px 1fr;gap:28px;padding:22px 0;border-top:1px solid var(--line)}
+.job .co{font-weight:600}.job .dt{font-size:14px;color:var(--mute)}
+.job h3{font-size:19px;color:var(--acc);margin-bottom:6px}.job p{margin:0 0 10px;color:var(--mute);font-size:15px}
+.about{display:grid;grid-template-columns:1.2fr 1fr;gap:44px}.about p{color:var(--mute);margin:0 0 14px}.about strong{color:var(--ink)}
+.row{display:grid;grid-template-columns:90px 1fr;gap:6px 18px;padding:14px 0;border-top:1px solid var(--line)}
+.row b{color:var(--acc);font-size:14px}.row small{display:block;color:var(--mute);font-size:14px}
+footer{margin:80px 0 0;border-top:1px solid var(--line);padding:30px 0 44px;color:var(--mute);font-size:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.an{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.an .wide{grid-column:1/-1}.an h3{font-size:18px;margin-bottom:4px}.an .cap{font-size:14px;color:var(--mute);margin:0 0 14px}
+.kp{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px}.kp .card{padding:18px}.kp b{display:block;font:700 30px "Space Grotesk",sans-serif;color:var(--acc)}.kp span{font-size:14px;color:var(--mute)}
+svg.ch{width:100%;height:auto;display:block}svg.ch text{font:11px Inter,sans-serif;fill:var(--mute)}
+.hb{display:grid;grid-template-columns:120px 1fr 44px;gap:10px;align-items:center;font-size:14px;margin:9px 0}.hb i{display:block;height:12px;border-radius:3px;background:var(--acc)}.hb i.o{background:var(--mute);opacity:.55}.hb em{font-style:normal;color:var(--mute);text-align:right}
+.lg{display:flex;gap:16px;font-size:13px;color:var(--mute);margin-top:8px}.lg s{display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--acc);margin-right:6px;text-decoration:none}
+.note{font-size:13px;color:var(--mute);margin-top:14px}
+body{font-size:18px}body,h1,h2,h3,.logo,.photo,.facts b,.kp b,.btn,.tabs button,svg.ch text{font-family:"Times New Roman",Times,"Liberation Serif",serif!important}h1,h2,h3{letter-spacing:-.01em}.card p,.job p,.about p{font-size:17px}
+html{background:#c2c7cf}body{background:linear-gradient(180deg,#e3e6ea,#c2c7cf) fixed,#d8dce2}header.top{background:rgba(216,220,226,.92)}
+.k,.kp b{color:#a8590f}.btn.g:hover{background:var(--soft)}.card{box-shadow:0 1px 2px rgba(22,50,58,.05)}a.card:hover{border-color:var(--acc2)}.tags span{border:1px solid #9aa1ad;color:var(--ink)}.facts b{color:var(--acc)}
+.k{color:var(--acc)}.kp b{color:var(--acc2)}.facts{display:none}.hero{padding:44px 0 36px}
+.sl{position:relative;background:var(--acc);color:#fff;border-radius:20px;overflow:hidden}
+.sl-st{display:grid;grid-template-columns:1.15fr 1fr;gap:36px;align-items:center;padding:56px 48px 34px;min-height:350px}
+.sl-st>*{animation:slin .5s ease both}@keyframes slin{from{opacity:0;transform:translateX(26px)}}
+.sl .lb{display:inline-block;background:var(--acc2);color:#16252b;padding:3px 13px;border-radius:99px;font-size:15px;font-weight:700;margin-bottom:16px}
+.sl h2{font-size:clamp(32px,5vw,56px);margin:0 0 14px;color:#fff;line-height:1.04}
+.sl p{margin:0 0 22px;opacity:.9;max-width:44ch}
+.sl .go{display:inline-block;background:var(--acc2);color:#16252b;padding:11px 22px;border-radius:8px;font-weight:700;text-decoration:none}
+.sl-ar{position:absolute;top:16px;right:18px;display:flex;gap:8px;z-index:2}
+.sl-ar button{width:38px;height:38px;border-radius:50%;border:1.5px solid rgba(255,255,255,.7);background:none;color:#fff;font-size:22px;line-height:1;cursor:pointer}.sl-ar button:hover{background:#fff;color:var(--acc)}
+.sl-tabs{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.28)}
+.sl-tabs button{position:relative;background:none;border:0;color:#fff;opacity:.72;padding:15px 12px;font:inherit;font-size:16px;cursor:pointer;text-align:left}
+.sl-tabs button[aria-selected=true]{opacity:1;font-weight:700}
+.sl-tabs button::after{content:"";position:absolute;left:0;top:-1px;height:4px;width:0;background:var(--acc2)}
+.sl-tabs button[aria-selected=true]::after{width:100%;animation:pg 6s linear}@keyframes pg{from{width:0}}
+.sl:hover .sl-tabs button::after{animation-play-state:paused}
+.sl :focus-visible{outline-color:#fff}
+.vis{display:grid;gap:12px}.vis small{opacity:.85;font-size:15px}
+.chip{display:flex;align-items:baseline;gap:14px;background:rgba(255,255,255,.13);border-radius:12px;padding:14px 20px}.chip b{font-size:38px;line-height:1;color:#fff;min-width:46px}.chip span{opacity:.92}
+.vb{display:grid;grid-template-columns:64px 1fr 40px;gap:10px;align-items:center;font-size:16px}.vb i{display:block;height:22px;border-radius:5px;background:rgba(255,255,255,.42);animation:gr .9s ease both}.vb i.a{background:var(--acc2)}@keyframes gr{from{width:0!important}}
+.dg{display:grid;grid-template-columns:repeat(13,1fr);gap:7px}.dg i{aspect-ratio:1;border-radius:50%;background:var(--acc2);animation:pop .4s ease both}@keyframes pop{from{transform:scale(0)}}
+.kp b{color:var(--acc)}.sl{background:var(--soft);color:var(--ink)}.sl h2{color:var(--ink)}.sl-tabs{border-top-color:var(--line)}.sl-tabs button{color:var(--ink)}.sl-ar button{border-color:var(--acc);color:var(--acc)}.sl-ar button:hover{background:var(--acc);color:#fff}.sl .lb{color:#fff}.sl .go{background:var(--acc);color:#fff}.sl :focus-visible{outline-color:var(--acc)}.chip{background:#fff}.chip b{color:var(--acc)}.vb i{background:#cfd9d6}.vb i.a,.dg i{background:var(--acc)}
+.sl{background:#141414;color:#e7e4dd}.sl h2{color:#e7e4dd}.sl-tabs{border-top-color:#444}.sl-tabs button{color:#e7e4dd}.sl-tabs button::after{background:#e7e4dd}.sl-ar button{border-color:#e7e4dd;color:#e7e4dd}.sl-ar button:hover{background:#e7e4dd;color:#141414}.sl .lb{background:#8a8a8a;color:#141414}.sl .go{background:#e7e4dd;color:#141414}.sl :focus-visible{outline-color:#e7e4dd}.chip{background:rgba(231,228,221,.1)}.chip b{color:#e7e4dd}.vb i{background:rgba(231,228,221,.28)}.vb i.a,.dg i{background:#e7e4dd}
+.sl{background:#0a0a0a;color:#f5f5f5}.sl h2,.sl p,.sl-tabs button,.chip b,.vis small{color:#f5f5f5;opacity:1}.sl-tabs button{opacity:.85}.sl-tabs button[aria-selected=true]{opacity:1}.sl .lb{background:#d6d6d6;color:#0a0a0a}.sl .go,.sl-ar button:hover{background:#f5f5f5;color:#0a0a0a}.sl-ar button{border-color:#f5f5f5;color:#f5f5f5}.sl-tabs button::after,.vb i.a,.dg i{background:#f5f5f5}.vb i{background:rgba(245,245,245,.35)}.chip{background:rgba(245,245,245,.15)}.sl-tabs{border-top-color:#555}
+.sl{color:#d4d4d4}.sl h2,.sl p,.sl-tabs button,.chip b,.vis small{color:#d4d4d4}.sl .lb{background:#c9c9c9}.sl .go,.sl-ar button:hover{background:#c9c9c9;color:#0a0a0a}.sl-ar button{border-color:#c9c9c9;color:#c9c9c9}.sl-tabs button::after,.vb i.a,.dg i{background:#c9c9c9}.vb i{background:rgba(201,201,201,.35)}.chip{background:rgba(201,201,201,.15)}
+.sl{background:#0c1a2e;color:#dbe4f0}.sl h2,.sl p,.sl-tabs button,.chip b,.vis small{color:#dbe4f0}.sl .lb{background:#cfdae8}.sl .go,.sl-ar button:hover{background:#cfdae8;color:#0c1a2e}.sl-ar button{border-color:#cfdae8;color:#cfdae8}.sl-tabs button::after,.vb i.a,.dg i{background:#9db8e0}.vb i{background:rgba(207,218,232,.3)}.chip{background:rgba(207,218,232,.14)}.sl-tabs{border-top-color:#3d5273}
+.lead2{color:var(--mute);max-width:64ch;margin:-12px 0 24px}
+.pp{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:20px}.pp div{background:var(--navy);color:var(--bg);padding:12px 8px;border-radius:8px;text-align:center;font-size:16px}.pp div:nth-child(odd){background:var(--acc)}.pp b{display:block;font-size:22px}
+.cs{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;padding:26px;border:1px solid var(--line);border-radius:12px;margin-bottom:16px}.cs:nth-child(even) .cv{order:-1}.cs h3{font-size:24px;margin-bottom:10px}.st p{margin:0 0 9px;font-size:17px}.st b{color:var(--acc)}
+.sl{background:#0b0d12;color:#dfe3ea}.sl h2,.sl p,.sl-tabs button,.chip b,.vis small{color:#dfe3ea}.sl .lb,.sl .go,.sl-ar button:hover{background:#6d9bf0;color:#0b0d12}.sl-ar button{border-color:#8a8f98;color:#dfe3ea}.sl-tabs button::after,.vb i.a,.dg i{background:#6d9bf0}.vb i{background:rgba(223,227,234,.3)}.chip{background:rgba(223,227,234,.12)}.sl-tabs{border-top-color:#3a3f4a}
+@media(max-width:780px){.cs{grid-template-columns:1fr;padding:20px}.cs:nth-child(even) .cv{order:0}.pp{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:780px){.sl-st{grid-template-columns:1fr;padding:30px 22px 22px;gap:22px;min-height:0}.sl-tabs button{font-size:13px;padding:12px 6px}.sl-ar{top:12px;right:12px}.sl-ar button{width:32px;height:32px}.sl h2{font-size:34px;margin-top:14px}}
+.hero>*{animation:in .7s ease both}@keyframes in{from{opacity:0;transform:translateY(14px)}}
+@media(max-width:780px){.an{grid-template-columns:1fr}.kp{grid-template-columns:1fr 1fr}.hb{grid-template-columns:96px 1fr 40px}.hero{grid-template-columns:1fr;padding-top:40px}.photo{width:170px;order:-1}.facts{grid-template-columns:1fr 1fr}.facts div:nth-child(2){border-right:0}.facts div:nth-child(-n+2){border-bottom:1px solid var(--line)}.job,.about{grid-template-columns:1fr;gap:6px}.links a:not(:last-child){display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
+<header class="top"><div class="wrap"><a class="logo" href="#top">Kerima Mussa</a>
+<nav class="links"><a href="#analytics">Analytics</a><a href="#cases">Scenarios</a><a href="#skills">Skills</a><a href="#experience">Experience</a><a href="#projects">Projects</a><a href="#more">Certifications</a><a href="#about">About</a><a href="#contact">Contact</a></nav></div></header>
 
-<div class="bg-glow"></div>
-<div class="bubble-field" id="bubble-field"></div>
-<div class="progress-rail" id="progress-rail" style="width:0%"></div>
-
-<nav>
-  <div class="nav-logo"><span class="dot"></span>KERIMA.MUSSA</div>
-  <ul class="nav-links">
-    <li><button data-n="0" data-target="0">Intro</button></li>
-    <li><button data-n="1" data-target="1">Skills</button></li>
-    <li><button data-n="2" data-target="2">Experience</button></li>
-    <li><button data-n="3" data-target="3">Projects</button></li>
-    <li><button data-n="4" data-target="4">Certs</button></li>
-    <li><button data-n="5" data-target="5">Awards</button></li>
-    <li><button data-n="6" data-target="6">About</button></li>
-    <li><button data-n="7" data-target="7">Contact</button></li>
-  </ul>
-  <div class="nav-status">STATUS: <span style="color:var(--cyan)">OPEN_TO_WORK</span></div>
-</nav>
-
-<div class="deck-dots" id="deck-dots"></div>
-<div class="deck-controls">
-  <button class="arrow-btn" id="prev-btn" aria-label="Previous slide">↑</button>
-  <span class="deck-count"><span class="cur" id="count-cur">01</span> / <span id="count-tot">08</span></span>
-  <button class="arrow-btn" id="next-btn" aria-label="Next slide">↓</button>
+<main class="wrap" id="top">
+<div class="hero">
+<div>
+<p class="role">Business Analyst · Data Operations · Reporting &amp; Automation · Software</p>
+<h1>Kerima Mussa</h1>
+<p class="sub">Business analyst and data operations professional with a computer science degree. I clean and analyze data, automate reporting, build dashboards and ship software that supports daily operations. My tools at Sheraton Hotels &amp; Resorts cut manual reporting time by 40%.</p>
+<a class="btn p" href="mailto:kerimamusa2021@gmail.com">Get in touch</a><a class="btn g" href="https://linkedin.com/in/kerima-mussa-a72735277" target="_blank" rel="noopener">LinkedIn</a><a class="btn g" href="https://github.com/Kerima-001" target="_blank" rel="noopener">GitHub</a>
 </div>
-
-<div id="deck">
-
-  <section class="slide" id="slide-hero" data-slide="0">
-    <canvas id="net-canvas"></canvas>
-    <div class="hero-grid">
-      <div>
-        <div class="hero-eyebrow">Software Engineer · AI/ML · Full-Stack · Cloud</div>
-        <h1>Kerima Mussa<span class="cursor"></span></h1>
-        <p class="hero-sub">CS graduate building intelligent systems, full stack applications, and data pipelines and production REST APIs. Shipped tools at GAO Tek and Sheraton Hotels &amp; Resorts, cutting reporting time.</p>
-        <div class="hero-cta">
-          <a href="mailto:kerimamusa2021@gmail.com" class="btn btn-solid">Get in touch</a>
-          <a href="https://linkedin.com/in/kerima-mussa-a72735277" target="_blank" class="btn btn-ghost">LinkedIn ↗</a>
-          <a href="https://github.com/Kerima-001" target="_blank" class="btn btn-ghost">GitHub ↗</a>
-        </div>
-        <div class="hero-stats">
-          <div class="stat"><div class="stat-val">3-4</div><div class="stat-lbl">Internships &amp; roles</div></div>
-          <div class="stat"><div class="stat-val">18%</div><div class="stat-lbl">Reporting time cut</div></div>
-          <div class="stat"><div class="stat-val">2026</div><div class="stat-lbl">B.S. CS grad</div></div>
-        </div>
-      </div>
-      <div class="id-card hud">
-        <div class="id-head"><span>KM</span><div class="id-dots"><i></i><i></i><i></i></div></div>
-        <div class="photo-frame">
-          <div class="photo-ring"></div>
-          <div class="photo-hex"><div class="scan"></div><img src="https://raw.githubusercontent.com/Kerima-001/portfolio/main/Kerima_Photo.jpg" alt="Kerima Mussa" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'initials',textContent:'KM'}))"></div>
-        </div>
-        <div class="id-meta">
-          <div class="id-row"><span class="k">Role</span><span class="v">SWE / AI-ML</span></div>
-          <div class="id-row"><span class="k">Availability</span><span class="v">Sept 2026</span></div>
-          <div class="id-row"><span class="k">Relocation</span><span class="v">Open</span></div>
-        </div>
-      </div>
-    </div>
-    <button class="scroll-hint" id="hero-next-hint" aria-label="Go to next page">next page <span class="chev">▾</span></button>
-  </section>
-
-  <section class="slide" id="slide-skills" data-slide="1">
-    <div class="slide-inner">
-      <div class="section-head"><span class="section-n">01</span><h2 class="section-title">Technical Skills</h2><div class="section-rule"></div></div>
-      <div class="skills-grid">
-        <div class="skill-cell">
-          <div class="skill-cat">Languages</div>
-          <div class="skill-tags">
-            <span class="tag">Python</span><span class="tag">Java</span><span class="tag">C++</span>
-            <span class="tag">C#</span><span class="tag">JavaScript</span><span class="tag">SQL</span>
-            <span class="tag">HTML</span>
-          </div>
-        </div>
-        <div class="skill-cell">
-          <div class="skill-cat">Frameworks &amp; Web</div>
-          <div class="skill-tags">
-            <span class="tag">React</span><span class="tag">Flask</span><span class="tag">FastAPI</span>
-            <span class="tag">REST APIs</span><span class="tag">Node.js</span>
-          </div>
-        </div>
-        <div class="skill-cell">
-          <div class="skill-cat">Cloud &amp; Data</div>
-          <div class="skill-tags">
-            <span class="tag">AWS</span><span class="tag">Docker</span><span class="tag">Azure</span>
-            <span class="tag">GCP</span><span class="tag">PostgreSQL</span><span class="tag">Supabase</span><span class="tag">Redis</span>
-          </div>
-        </div>
-        <div class="skill-cell">
-          <div class="skill-cat">AI-Assisted &amp; Testing</div>
-          <div class="skill-tags">
-            <span class="tag">Claude Code</span>
-            <span class="tag">pytest / JUnit</span><span class="tag">GitHub Actions</span><span class="tag">CI/CD</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="slide" id="slide-experience" data-slide="2">
-    <div class="slide-inner">
-      <div class="section-head"><span class="section-n">02</span><h2 class="section-title">Experience</h2><div class="section-rule"></div></div>
-      <div class="exp-tabs">
-        <button class="exp-tab active" data-exp="tech">Technical Roles</button>
-        <button class="exp-tab" data-exp="leadership">Campus Leadership</button>
-      </div>
-
-      <div class="exp-group active" data-exp-group="tech">
-        <div class="timeline">
-          <div class="tl-item">
-          <div><div class="tl-co">Perfect Solutions Group Inc.</div><div class="tl-date">Sept  2026 - Present</div></div>
-             <div>
-             <div class="tl-role">Software Engineer</div>
-             <p class="tl-desc">Build full-stack web applications, from responsive React front ends to Node.js and Flask REST and GraphQL APIs backed by SQL and NoSQL databases. Implement secure authentication with JWT and OAuth, write unit and integration tests, and deploy through CI/CD pipelines on cloud platforms. Work with designers, product managers, and developers in an Agile/Scrum team.</p>
-            <div class="badges"><span class="badge">React</span><span class="badge">Node.js</span><span class="badge">REST / GraphQL</span><span class="badge">PostgreSQL</span><span class="badge">CI/CD</span><span class="badge">Agile</span></div>
-             </div>
-             </div>
-          <div class="tl-item">
-            <div><div class="tl-co">Sheraton Hotels &amp; Resorts</div><div class="tl-date">Sep 2025 - Mar 2026</div></div>
-            <div>
-              <div class="tl-role">Software Systems Intern</div>
-              <p class="tl-desc">Engineered a Python/SQL automation pipeline for data collection and reporting, cutting manual reporting time by 40% and eliminating recurring data entry errors. Built interactive dashboards tracking occupancy, guest satisfaction, and key metrics; wrote unit tests and used Claude Code to accelerate development.</p>
-              <div class="badges"><span class="badge">Python</span><span class="badge">SQL</span><span class="badge">Automation</span><span class="badge">Dashboards</span><span class="badge">Claude Code</span></div>
-            </div>
-          </div>
-          <div class="tl-item">
-            <div><div class="tl-co">GAO Tek Inc.</div><div class="tl-date">Jun 2025 - Aug 2025</div></div>
-            <div>
-              <div class="tl-role">AI &amp; Web Developer Intern</div>
-              <p class="tl-desc"> Developed CUDA and Triton kernels for AI hardware, increasing LLM inference speed by 17%. Built tools to analyze and improve kernel performance.</p>
-              <div class="badges"><span class="badge">CUDA</span><span class="badge">Triton</span><span class="badge">LLVM MLIR</span><span class="badge">PyTorch</span></div>
-            </div>
-          </div>
-          <div class="tl-item">
-            <div><div class="tl-co">Boreal Waters Community Foundation</div><div class="tl-date">May 2025 - Oct 2025</div></div>
-            <div>
-              <div class="tl-role">Research Assistant</div>
-              <p class="tl-desc">Collected, cleaned, and integrated large datasets to analyze the impact of federal funding and policy changes across Northeast Minnesota. Used data analysis and visualization to identify trends and communicate findings to policymakers, community organizations, and academic stakeholders. Recognized with a Letter of Recognition for Undergraduate Research.</p>
-              <div class="badges"><span class="badge">Data Cleaning</span><span class="badge">Data Integration</span><span class="badge">Visualization</span><span class="badge">Reporting</span></div>
-            </div>
-          </div>
-          <div class="tl-item">
-            <div><div class="tl-co">Sheraton Hotels &amp; Resorts</div><div class="tl-date">Apr 2024 - Jan 2025</div></div>
-            <div>
-              <div class="tl-role">Information Technology Help Desk</div>
-              <p class="tl-desc">Provided technical support and troubleshooting for hotel systems and staff, resolving issues efficiently to keep operations running smoothly.</p>
-              <div class="badges"><span class="badge">Technical Support</span><span class="badge">Troubleshooting</span></div>
-            </div>
-          </div>
-          <div class="tl-item">
-            <div><div class="tl-co">CUTCO Cutlery</div><div class="tl-date">Aug 2024 - Dec 2024</div></div>
-            <div>
-              <div class="tl-role">Technology Sales Development Intern</div>
-              <p class="tl-desc">Drove revenue growth through personalized product recommendations, data-informed outreach, and client relationship management, consistently exceeding sales targets.</p>
-              <div class="badges"><span class="badge">Communication</span><span class="badge">Product Demos</span><span class="badge">Client Relations</span></div>
-            </div>
-          </div>
-          <div class="tl-item">
-            <div><div class="tl-co">GAO Tek Inc.</div><div class="tl-date">May 2024 - Sep 2024</div></div>
-            <div>
-              <div class="tl-role">Software Development Intern</div>
-              <p class="tl-desc">Built and maintained software applications using Python, REST APIs, and web technologies to support core business operations. Set up CI/CD workflows on AWS to automate testing and deployment, collaborating with a cross-functional team to ship features and resolve defects.</p>
-              <div class="badges"><span class="badge">Python</span><span class="badge">REST APIs</span><span class="badge">AWS</span><span class="badge">CI/CD</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="exp-group" data-exp-group="leadership">
-        <div class="timeline">
-          <div class="tl-item">
-            <div><div class="tl-co">UW-Superior</div><div class="tl-date">Sep 2025 - May 2026</div></div>
-            <div>
-              <div class="tl-role">President, Math &amp; Computer Science Club</div>
-              <p class="tl-desc">Led workshops, hackathons, and guest speaker sessions; managed club activities and budgeting.</p>
-              <div class="badges"><span class="badge">Leadership</span><span class="badge">STEM Engagement</span><span class="badge">Budgeting</span></div>
-            </div>
-          </div>
-          <div class="tl-item">
-            <div><div class="tl-co">Educational Success Center, UW-Superior</div><div class="tl-date">Sep 2025 - May 2026</div></div>
-            <div>
-              <div class="tl-role">Student Ambassador Lead &amp; Tutor Cohort Leader</div>
-              <p class="tl-desc">Promoted to lead student ambassadors and 65+ tutored students; trained peer tutors and supported outreach, mentoring, and recruitment initiatives.</p>
-              <div class="badges"><span class="badge">Strategic Planning</span><span class="badge">Report Automation</span><span class="badge">Mentorship</span></div>
-            </div>
-          </div>
-          <div class="tl-item">
-            <div><div class="tl-co">UW-Superior Housing</div><div class="tl-date">Sep 2024 - May 2026</div></div>
-            <div>
-              <div class="tl-role">Resident Assistant</div>
-              <p class="tl-desc">Created a welcoming, supportive living environment for students; assisted residents with concerns, enforced community guidelines, and planned engagement events.</p>
-              <div class="badges"><span class="badge">Communication</span><span class="badge">Mentorship</span></div>
-            </div>
-          </div>
-          <div class="tl-item">
-            <div><div class="tl-co">UW-Superior</div><div class="tl-date">Jan 2023 - May 2026</div></div>
-            <div>
-              <div class="tl-role">Outreach</div>
-              <p class="tl-desc">Coordinated events, managed resources, and delivered customer service, creating inclusive environments and collaborating across teams to achieve organizational goals.</p>
-              <div class="badges"><span class="badge">Public Speaking</span><span class="badge">Event Planning</span></div>
-            </div>
-          </div>
-          <div class="tl-item">
-            <div><div class="tl-co">Educational Success Center, UW-Superior</div><div class="tl-date">Sep 2023 - Aug 2025</div></div>
-            <div>
-              <div class="tl-role">Student Administrative Assistant</div>
-              <p class="tl-desc">Provided administrative and student support, assisting with event coordination, resource management, and daily office operations while managing multiple responsibilities.</p>
-              <div class="badges"><span class="badge">Operations</span><span class="badge">Coordination</span></div>
-            </div>
-          </div>
-          <div class="tl-item">
-            <div><div class="tl-co">UW-Superior</div><div class="tl-date">Feb 2023 - Sep 2023</div></div>
-            <div>
-              <div class="tl-role">Student Involvement Assistant</div>
-              <p class="tl-desc">Coordinated inclusive, campus-wide events and streamlined registration workflows, reducing wait times and increasing student turnout.</p>
-              <div class="badges"><span class="badge">Event Ops</span><span class="badge">Process Improvement</span></div>
-            </div>
-          </div>
-          <div class="tl-item">
-            <div><div class="tl-co">UW-Superior</div><div class="tl-date">Nov 2022 - Jan 2023</div></div>
-            <div>
-              <div class="tl-role">Administrative Assistant</div>
-              <p class="tl-desc">Worked with campus and district officials to secure funding for the Math &amp; CS departments, sourcing the best prices for essential resources within budget.</p>
-              <div class="badges"><span class="badge">Budget Management</span><span class="badge">Data Management</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="slide" id="slide-projects" data-slide="3">
-    <div class="slide-inner">
-      <div class="section-head"><span class="section-n">03</span><h2 class="section-title">Selected Projects</h2><div class="section-rule"></div></div>
-      <div class="proj-grid">
-        <a href="https://github.com/Kerima-001/Capstone-Project" target="_blank" class="proj-card">
-          <div class="proj-arrow">↗</div>
-          <div class="proj-top"><span class="proj-index">01</span><span class="proj-cat">Capstone · Python / Selenium / API</span></div>
-          <div class="proj-name">Facilitating Student Course Scheduling</div>
-          <p class="proj-desc">Used Selenium to scrape tuition data and a REST API to expose it for analysis. Detects anomalies by cross-referencing scraped records against expected billing schedules.</p>
-          <div class="badges"><span class="badge">Python</span><span class="badge">Selenium</span><span class="badge">REST API</span><span class="badge">Flask</span></div>
-        </a>
-        <a href="https://github.com/Kerima-001/Campus-Safety-Alert" target="_blank" class="proj-card">
-          <div class="proj-arrow">↗</div>
-          <div class="proj-top"><span class="proj-index">02</span><span class="proj-cat">Mobile · Safety</span></div>
-          <div class="proj-name">Campus Safety Alert App</div>
-          <p class="proj-desc">Real-time student safety alert system for UW-Superior. Location-aware push notifications and incident reporting to improve campus emergency response.</p>
-          <div class="badges"><span class="badge">Python</span><span class="badge">Flutter</span><span class="badge">REST API</span></div>
-        </a>
-        <a href="https://github.com/Kerima-001/DeptOpsToolkit" target="_blank" class="proj-card">
-          <div class="proj-arrow">↗</div>
-          <div class="proj-top"><span class="proj-index">03</span><span class="proj-cat">Systems · Admin</span></div>
-          <div class="proj-name">Department Resource &amp; Budget Tool</div>
-          <p class="proj-desc">Faculty resource and budget management system for the CS/Math department. Streamlined budget reporting and resource allocation for department administration.</p>
-          <div class="badges"><span class="badge">Python</span><span class="badge">SQL</span><span class="badge">Automation</span></div>
-        </a>
-        <a href="https://github.com/Kerima-001/Eco_Sense_Ai" target="_blank" class="proj-card">
-          <div class="proj-arrow">↗</div>
-          <div class="proj-top"><span class="proj-index">04</span><span class="proj-cat">Python · AI</span></div>
-          <div class="proj-name">Eco Sense AI</div>
-          <p class="proj-desc">AI system that ingests environmental data and detects sustainability trends using predictive modeling, built as an end-to-end pipeline from raw data to insights.</p>
-          <div class="badges"><span class="badge">Python</span><span class="badge">ML</span><span class="badge">Predictive modeling</span></div>
-        </a>
-        <a href="https://github.com/Kerima-001/AI-Doc" target="_blank" class="proj-card">
-          <div class="proj-arrow">↗</div>
-          <div class="proj-top"><span class="proj-index">05</span><span class="proj-cat">AI · LangChain</span></div>
-          <div class="proj-name">AI Documentation System</div>
-          <p class="proj-desc">Intelligent documentation pipeline built at GAO Tek ,AI-driven content generation, summarization, and code annotation across global engineering teams.</p>
-          <div class="badges"><span class="badge">LangChain</span><span class="badge">Flask</span><span class="badge">Python</span></div>
-        </a>
-        <a href="https://github.com/Kerima-001?tab=repositories" target="_blank" class="proj-card">
-          <div class="proj-arrow">↗</div>
-          <div class="proj-top"><span class="proj-index">06</span><span class="proj-cat">Python · OOP</span></div>
-          <div class="proj-name">Game Application</div>
-          <p class="proj-desc">Interactive game with clean game loop logic, modular architecture, and structured user input handling, demonstrating core software design principles.</p>
-          <div class="badges"><span class="badge">Python</span><span class="badge">OOP</span><span class="badge">Software design</span></div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <section class="slide" id="slide-certs" data-slide="4">
-    <div class="slide-inner">
-      <div class="section-head"><span class="section-n">04</span><h2 class="section-title">Certifications</h2><div class="section-rule"></div></div>
-      <div class="cred-grid">
-        <a class="cred-card" href="https://www.linkedin.com/learning/certificates/e56024caf06088f59bf292576821268a7564638f429c543fc0cc3ddfb4780235/" target="_blank">
-          <div class="cred-name">Microsoft Azure Essentials</div>
-          <div class="cred-org">Microsoft Press · LinkedIn Learning</div>
-        </a>
-        <a class="cred-card" href="https://www.linkedin.com/learning/certificates/906ca1c37d0fa3922947cb74f4ddfe2fa94ca3c8693987927ceb98e9a8bfce39/" target="_blank">
-          <div class="cred-name">Complete Guide to GitHub Copilot for Developers</div>
-          <div class="cred-org">Microsoft Press · LinkedIn Learning</div>
-        </a>
-        <a class="cred-card" href="https://www.linkedin.com/learning/certificates/85794681833b5c38c6e0131122f771789f3d84439d6b59b5c55ae9feaacc2757/" target="_blank">
-          <div class="cred-name">Career Essentials in Cybersecurity</div>
-          <div class="cred-org">Microsoft &amp; LinkedIn</div>
-          <div class="cred-skills">Threat &amp; Vulnerability Management · Information Security Awareness</div>
-        </a>
-        <a class="cred-card" href="https://www.linkedin.com/learning/certificates/c382750e26488d9231f6c73e41a304f31eb778dd75b5170a875d52d129388691/" target="_blank">
-          <div class="cred-name">Cybersecurity Foundations</div>
-          <div class="cred-org">LinkedIn Learning</div>
-          <div class="cred-skills">Cybersecurity</div>
-        </a>
-        <a class="cred-card" href="https://www.linkedin.com/learning/certificates/e85840fce85eda9cec719347b3d601a434d30dee239cca140fbd3704f8a72bb9/" target="_blank">
-          <div class="cred-name">Practice Exam 2 - CompTIA Network+ (N10-009)</div>
-          <div class="cred-org">LinkedIn Learning</div>
-        </a>
-        <a class="cred-card" href="https://www.linkedin.com/learning/certificates/ae89c681caf9a885b5477c13d4ee96bdbc17d963d7e5ffab7dddf14e13d5f61b/" target="_blank">
-          <div class="cred-name">The Cybersecurity Threat Landscape</div>
-          <div class="cred-org">LinkedIn Learning</div>
-          <div class="cred-skills">Threat &amp; Vulnerability Management</div>
-        </a>
-        <a class="cred-card" href="https://www.linkedin.com/learning/certificates/f866f5ee7f7456021e4b48ef254a454c03aab2665c4a971d952955b6c765a644/" target="_blank">
-          <div class="cred-name">Cybersecurity Awareness: Terminology</div>
-          <div class="cred-org">LinkedIn Learning</div>
-          <div class="cred-skills">Information Security Awareness · Cybersecurity</div>
-        </a>
-        <a class="cred-card" href="https://badges.parchment.com/public/assertions/BcKv_l28SgmNqihlGeLLKA/" target="_blank">
-          <div class="cred-name">Supporting Technology Literacy</div>
-          <div class="cred-org">Canvas Credentials (Badgr)</div>
-        </a>
-        <a class="cred-card"  href="https://www.mentorcollective.org/" target="_blank">
-          <div class="cred-name">Student Success Mentor Training</div>
-          <div class="cred-org">Mentor Collective</div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <section class="slide" id="slide-awards" data-slide="5">
-    <div class="slide-inner">
-      <div class="section-head"><span class="section-n">05</span><h2 class="section-title">Awards &amp; Recognition</h2><div class="section-rule"></div></div>
-      <div class="awards-list">
-  <div class="award-row">
-          <div class="award-yr">2x </div>
-          <div class="award-n">Dean's List </div>
-          <div class="award-org">UW-Superior</div>
-          <p class="award-d">Recognized on the Dean's List in academic terms. </p>
-        </div>
-        <div class="award-row">
-          <div class="award-yr">24-25</div>
-          <div class="award-n">Achievement Recoginition</div>
-          <div class="award-org">/div>Junir Award Achievement </div>
-          <p class="award-d">Selected for academic excellence in School of Business and Economics in Business Analytics</p>
-        </div>
-        <div class="award-row">
-          <div class="award-yr">25-26</div>
-          <div class="award-n">Khalte &amp; Rhodes Scholar</div>
-          <div class="award-org">UW-Superior</div>
-          <p class="award-d"> Awarded 4x &amp; in recognition of academic merit and demonstrated leadership.</p>
-        </div>
-        <div class="award-row">
-          <div class="award-yr">RESEARCH</div>
-          <div class="award-n">Letter of Recognition for Undergraduate Research</div>
-          <div class="award-org">Boreal Waters Community Foundation</div>
-          <p class="award-d">Recognized for data-driven research on the impact of federal funding and policy changes across Northeast Minnesota.</p>
-        </div>
-        <div class="award-row">
-          <div class="award-yr">ESC</div>
-          <div class="award-n">Tutor Cohort &amp; Ambassador Leadership Recognition</div>
-          <div class="award-org">Educational Success Center</div>
-          <p class="award-d">Honored for leading 65+ tutored students and peer ambassadors and improving student outcomes.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="slide" id="slide-about" data-slide="6">
-    <div class="slide-inner">
-      <div class="section-head"><span class="section-n">06</span><h2 class="section-title">About Me</h2><div class="section-rule"></div></div>
-      <div class="about-grid">
-        <div class="about-text">
-          <p>I started coding because I wanted to build things that mattered. That hasn't changed.</p>
-          <p>I'm a <strong>Computer Science graduate</strong> of the University of Wisconsin - Superior (May 2026), with a minor in Business Analytics &amp; Mathematics. I design and ship full-stack applications, custom GPU kernels, and automation tools from React dashboards and FastAPI backends to CUDA/Triton kernels for LLM inference and Python/SQL reporting pipelines.</p>
-          <p>Outside of code I lead. I served as <strong>President of the Math &amp; Computer Science Club</strong>, as a Student Ambassador Lead and Tutor Cohort Leader supporting 65+ students, and as a Resident Assistant. The best engineers lift the people around them , that matters to me as much as the code does.</p>
-          <p>Currently deepening my work in AI-assisted software development, cloud infrastructure, and cybersecurity fundamentals. Always looking for the next hard problem worth solving.</p>
-        </div>
-        <div class="about-blocks">
-          <div class="about-block hud">
-            <div class="ab-title">Education</div>
-            <div class="ab-body">B.S. Computer Science · May 2026<br>Minor: Business Analytics &amp; Mathematics<br>University of Wisconsin - Superior<br>Dean's List · Academic Excellence Recognition</div>
-          </div>
-          <div class="about-block hud">
-            <div class="ab-title">Leadership</div>
-            <div class="ab-body">President, Math &amp; CS Club<br>Student Ambassador Lead &amp; Tutor Cohort Leader<br>Resident Assistant<br>Programming Competition Winner</div>
-          </div>
-          <div class="about-block hud">
-            <div class="ab-title">Currently exploring</div>
-            <div class="ab-body">GPU kernels &amp; LLM inference optimization<br>Cloud &amp; cybersecurity fundamentals<br>AI-assisted full-stack development<br>Open to new-grad roles &amp; collaborations</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="slide" id="slide-contact" data-slide="7">
-    <div class="slide-inner">
-      <div class="section-head"><span class="section-n">07</span><h2 class="section-title">Get in Touch</h2><div class="section-rule"></div></div>
-      <div class="contact-row">
-        <div class="contact-item hud">
-          <div class="c-label">Email</div>
-          <a href="mailto:kerimamusa2021@gmail.com" class="c-val">kerimamusa2021@gmail.com</a>
-        </div>
-        <div class="contact-item hud">
-          <div class="c-label">LinkedIn</div>
-          <a href="https://linkedin.com/in/kerima-mussa-a72735277" target="_blank" class="c-val">linkedin.com/in/kerima-mussa</a>
-        </div>
-        <div class="contact-item hud">
-          <div class="c-label">GitHub</div>
-          <a href="https://github.com/Kerima-001" target="_blank" class="c-val">github.com/Kerima-001</a>
-        </div>
-      </div>
-      <div class="deck-footer">
-        <span class="footer-name">KERIMA MUSSA</span>
-        <span>B.S. Computer Science · UW-Superior · Available Aug 2026</span>
-      </div>
-    </div>
-  </section>
-
+<div class="photo"><img src="https://raw.githubusercontent.com/Kerima-001/portfolio/main/Kerima_Photo.jpg" alt="Portrait of Kerima Mussa" onerror="this.remove();this.parentNode.textContent='KM'">KM</div>
 </div>
+<div class="sl" id="sl" role="region" aria-roledescription="carousel" aria-label="Highlights"></div>
+<div class="facts"><div><b>7</b><span>Internships and technical roles</span></div><div><b>40%</b><span>Reporting time cut at Sheraton</span></div><div><b>17%</b><span>Faster LLM inference at GAO Tek</span></div><div><b>65+</b><span>Students led as tutor cohort leader</span></div></div>
+
+<section id="cases"><h2>Business scenarios</h2><p class="lead2">Four situations I have worked on, how I approached each one, and what the data showed. Every case follows the same process.</p><div id="pipe"></div><div class="kp" id="kb"></div><div id="cs"></div><p class="note">Charts use illustrative sample data unless a real result is stated.</p></section>
+<section id="skills"><h2>Technical skills</h2><div class="grid" id="skills-g"></div></section>
+<section id="experience"><h2>Experience</h2>
+<div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-t="tech">Technical roles</button><button role="tab" aria-selected="false" data-t="lead">Campus leadership</button></div>
+<div id="jobs"></div></section>
+<section id="projects"><h2>Selected projects</h2><div class="grid" id="proj-g"></div></section>
+<section id="analytics"><h2>Business analytics</h2>
+<p style="color:var(--mute);max-width:64ch;margin:-12px 0 24px">With a minor in Business Analytics and a School of Business and Economics achievement award, I turn raw data into reports and dashboards that people use to make decisions.</p>
+<div class="kp"><div class="card"><b>40%</b><span>Less manual reporting time</span></div><div class="card"><b>2</b><span>Reporting and budget tools built</span></div><div class="card"><b>1</b><span>Regional funding research study</span></div><div class="card"><b>6</b><span>Projects shown with data visuals</span></div></div>
+<div class="an">
+<div class="card wide"><h3>Hotel performance dashboard</h3><p class="cap">Monthly occupancy (bars) and guest satisfaction score (line), the kind of view I built at Sheraton.</p><div id="c-occ"></div><div class="lg"><span><s style="background:var(--acc2)"></s>Occupancy %</span><span><s style="border-radius:50%;background:var(--navy)"></s>Satisfaction (out of 5)</span></div><p class="note">Illustrative sample data, not real hotel figures.</p></div>
+<div class="card"><h3>Measured results</h3><p class="cap">Before and after, indexed to 100.</p><div id="c-imp"></div></div>
+<div class="card"><h3>Department budget view</h3><p class="cap">Spending by category, from my resource and budget tool.</p><div id="c-bud"></div><p class="note">Illustrative sample data.</p></div>
+<div class="card wide"><h3>Eco Sense AI: actual vs predicted</h3><p class="cap">Monthly sustainability index. The dashed grey line is the model’s forecast, which stayed within 2 points of actuals in this sample.</p><div id="c-eco"></div><div class="lg"><span><s style="background:var(--navy)"></s>Actual</span><span><s style="background:var(--acc)"></s>Predicted</span></div><p class="note">Illustrative sample data.</p></div>
+<div class="card"><h3>Capstone: billing anomaly check</h3><p class="cap">Variance between scraped tuition and expected billing, by batch. Batches 4 and 7 pass the ±5% line and are highlighted.</p><div id="c-cap"></div><p class="note">Illustrative sample data.</p></div>
+<div class="card"><h3>Campus Safety Alert: incidents by time</h3><p class="cap">Reports per time of day, used to time alerts and focus patrols.</p><div id="c-saf"></div><p class="note">Illustrative sample data.</p></div>
+<div class="card wide"><h3>Analytics toolkit</h3><p class="cap">How I work with data from raw files to a decision.</p>
+<div id="c-tools"></div></div></div></section>
+<section id="more"><h2>Certifications</h2><div class="grid" id="cert-g"></div>
+<h2 style="margin-top:56px">Awards and recognition</h2><div id="awards"></div></section>
+<section id="about"><h2>About me</h2><div class="about"><div>
+<p>I started coding because I wanted to build things that matter. That hasn’t changed.</p>
+<p>I’m a <strong>Computer Science graduate</strong> of the University of Wisconsin–Superior (May 2026) with a minor in Business Analytics and Mathematics. I build full-stack applications, custom GPU kernels and automation tools, from React dashboards and FastAPI backends to CUDA and Triton kernels for LLM inference.</p>
+<p>Outside of code I lead. I was <strong>President of the Math &amp; Computer Science Club</strong>, a Student Ambassador Lead and Tutor Cohort Leader supporting 65+ students, and a Resident Assistant. Good engineers lift the people around them.</p>
+<p>I’m now deepening my work in AI-assisted development, cloud infrastructure and cybersecurity.</p></div>
+<div class="grid" style="grid-template-columns:1fr;align-content:start">
+<div class="card"><h3>Education</h3><p>B.S. Computer Science, May 2026<br>Minor: Business Analytics and Mathematics<br>University of Wisconsin–Superior</p></div>
+<div class="card"><h3>Currently exploring</h3><p>GPU kernels and LLM inference optimization, cloud and cybersecurity fundamentals, AI-assisted full-stack development.</p></div></div></div></section>
+<section id="contact"><h2>Get in touch</h2><div class="grid">
+<a class="card" href="mailto:kerimamusa2021@gmail.com"><div class="k">Email</div>kerimamusa2021@gmail.com</a>
+<a class="card" href="https://linkedin.com/in/kerima-mussa-a72735277" target="_blank" rel="noopener"><div class="k">LinkedIn</div>linkedin.com/in/kerima-mussa</a>
+<a class="card" href="https://github.com/Kerima-001" target="_blank" rel="noopener"><div class="k">GitHub</div>github.com/Kerima-001</a></div></section>
+<footer><span>© 2026 Kerima Mussa</span><span>B.S. Computer Science · UW–Superior</span></footer>
+</main>
 
 <script>
-(function(){
-  var field = document.getElementById('bubble-field');
-  var palette = ['rgba(41,85,201,.08)','rgba(28,39,64,.07)','rgba(41,85,201,.06)'];
-  var n = 8;
-  for(var i=0;i<n;i++){
-    var b = document.createElement('div');
-    b.className = 'bubble b-glass';
-    var size = 40 + Math.random()*140;
-    b.style.width = size+'px';
-    b.style.height = size+'px';
-    b.style.left = (Math.random()*100)+'%';
-    b.style.top = (Math.random()*100)+'%';
-    b.style.background = 'radial-gradient(circle at 32% 28%, rgba(255,255,255,.85), '+palette[i%palette.length]+' 55%, rgba(255,255,255,0) 78%)';
-    var dur = 14 + Math.random()*18;
-    b.style.animationDuration = dur+'s';
-    b.style.animationDelay = (-Math.random()*dur)+'s';
-    field.appendChild(b);
-  }
-})();
-(function(){
-  var deck = document.getElementById('deck');
-  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
-  var total = slides.length;
-  var current = 0;
-  var animating = false;
-  var ANIM_MS = 560;
-
-  var dotsWrap = document.getElementById('deck-dots');
-  var labels = ['Intro','Skills','Experience','Projects','Certs','Awards','About','Contact'];
-  slides.forEach(function(s,i){
-    var b = document.createElement('button');
-    b.setAttribute('aria-label','Go to '+labels[i]);
-    var tip = document.createElement('span');
-    tip.className = 'tip'; tip.textContent = labels[i];
-    b.appendChild(tip);
-    b.addEventListener('click', function(){ goTo(i); });
-    dotsWrap.appendChild(b);
-  });
-  var dotBtns = dotsWrap.querySelectorAll('button');
-
-  document.getElementById('count-tot').textContent = String(total).padStart(2,'0');
-
-  function render(i, dir){
-    // dir: 1 = moving forward (new slide enters from below), -1 = moving backward (new slide enters from above)
-    slides.forEach(function(s, j){
-      s.classList.remove('is-active','is-exit-up','is-exit-down');
-      if(j === i){
-        s.classList.add('is-active');
-      } else if(j === current && dir === 1){
-        s.classList.add('is-exit-up');
-      } else if(j === current && dir === -1){
-        s.classList.add('is-exit-down');
-      }
-    });
-    slides[i].scrollTop = 0;
-    var innerEl = slides[i].querySelector('.slide-inner');
-    if(innerEl) innerEl.scrollTop = 0;
-  }
-
-  function goTo(i){
-    i = Math.max(0, Math.min(total-1, i));
-    if(i === current || animating) return;
-    var dir = i > current ? 1 : -1;
-    animating = true;
-    render(i, dir);
-    updateActive(i);
-    window.setTimeout(function(){ animating = false; }, ANIM_MS);
-  }
-
-  function updateActive(i){
-    current = i;
-    dotBtns.forEach(function(b,j){ b.classList.toggle('active', j===i); });
-    document.querySelectorAll('.nav-links button').forEach(function(b){
-      b.classList.toggle('active', Number(b.dataset.target)===i);
-    });
-    document.getElementById('count-cur').textContent = String(i+1).padStart(2,'0');
-    document.getElementById('prev-btn').disabled = (i===0);
-    document.getElementById('next-btn').disabled = (i===total-1);
-    document.getElementById('progress-rail').style.width = (((i+1)/total)*100)+'%';
-  }
-
-  document.querySelectorAll('.nav-links button').forEach(function(b){
-    b.addEventListener('click', function(){ goTo(Number(b.dataset.target)); });
-  });
-
-  document.getElementById('prev-btn').addEventListener('click', function(){ goTo(current-1); });
-  document.getElementById('next-btn').addEventListener('click', function(){ goTo(current+1); });
-  var heroHint = document.getElementById('hero-next-hint');
-  if(heroHint) heroHint.addEventListener('click', function(){ goTo(current+1); });
-
-  window.addEventListener('keydown', function(e){
-    if(e.key==='ArrowDown' || e.key==='PageDown'){ e.preventDefault(); goTo(current+1); }
-    else if(e.key==='ArrowUp' || e.key==='PageUp'){ e.preventDefault(); goTo(current-1); }
-    else if(e.key===' '){ e.preventDefault(); goTo(current+1); }
-    else if(e.key==='Home'){ goTo(0); }
-    else if(e.key==='End'){ goTo(total-1); }
-  });
-
-  // Wheel navigation - one page per gesture, debounced against the animation lock
-  var wheelCooldown = false;
-  deck.addEventListener('wheel', function(e){
-    e.preventDefault();
-    if(wheelCooldown || animating) return;
-    if(Math.abs(e.deltaY) < 12) return;
-    wheelCooldown = true;
-    if(e.deltaY > 0) goTo(current+1); else goTo(current-1);
-    window.setTimeout(function(){ wheelCooldown = false; }, ANIM_MS + 80);
-  }, {passive:false});
-
-  // Touch swipe navigation
-  var touchStartY = null;
-  deck.addEventListener('touchstart', function(e){ touchStartY = e.touches[0].clientY; }, {passive:true});
-  deck.addEventListener('touchend', function(e){
-    if(touchStartY === null) return;
-    var dy = touchStartY - e.changedTouches[0].clientY;
-    touchStartY = null;
-    if(Math.abs(dy) < 44) return;
-    if(dy > 0) goTo(current+1); else goTo(current-1);
-  }, {passive:true});
-
-  render(0, 0);
-  updateActive(0);
-
-  var expTabs = document.querySelectorAll('.exp-tab');
-  var expGroups = document.querySelectorAll('.exp-group');
-  expTabs.forEach(function(tab){
-    tab.addEventListener('click', function(){
-      var target = tab.dataset.exp;
-      expTabs.forEach(function(t){ t.classList.toggle('active', t===tab); });
-      expGroups.forEach(function(g){ g.classList.toggle('active', g.dataset.expGroup===target); });
-    });
-  });
-
-  var canvas = document.getElementById('net-canvas');
-  var ctx = canvas.getContext('2d');
-  var heroSlide = document.getElementById('slide-hero');
-  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var W,H,nodes=[];
-  function resize(){
-    W = canvas.width = heroSlide.offsetWidth;
-    H = canvas.height = heroSlide.offsetHeight;
-  }
-  function initNet(){
-    resize();
-    var count = Math.max(16, Math.floor(W/100));
-    nodes = [];
-    for(var i=0;i<count;i++){
-      nodes.push({ x: Math.random()*W, y: Math.random()*H, vx:(Math.random()-0.5)*0.18, vy:(Math.random()-0.5)*0.18 });
-    }
-  }
-  function stepNet(){
-    ctx.clearRect(0,0,W,H);
-    for(var i=0;i<nodes.length;i++){
-      var n = nodes[i];
-      if(!reduced){ n.x+=n.vx; n.y+=n.vy; }
-      if(n.x<0||n.x>W) n.vx*=-1;
-      if(n.y<0||n.y>H) n.vy*=-1;
-    }
-    for(var i=0;i<nodes.length;i++){
-      for(var j=i+1;j<nodes.length;j++){
-        var a=nodes[i], b=nodes[j];
-        var dx=a.x-b.x, dy=a.y-b.y, dist=Math.sqrt(dx*dx+dy*dy);
-        if(dist<160){
-          ctx.strokeStyle = 'rgba(92,107,133,'+(0.16*(1-dist/160))+')';
-          ctx.lineWidth = 1;
-          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
-        }
-      }
-    }
-    for(var i=0;i<nodes.length;i++){
-      ctx.beginPath(); ctx.arc(nodes[i].x,nodes[i].y,1.8,0,Math.PI*2);
-      ctx.fillStyle = 'rgba(41,85,201,0.7)'; ctx.fill();
-    }
-    if(!reduced) requestAnimationFrame(stepNet);
-  }
-  window.addEventListener('resize', function(){ resize(); });
-  initNet(); stepNet();
-})();
+var $=function(i){return document.getElementById(i)};
+function tg(a){return '<div class="tags">'+a.map(function(x){return '<span>'+x+'</span>'}).join('')+'</div>'}
+var S={"Languages":["Python","Java","C++","C#","JavaScript","SQL","HTML"],"Frameworks and web":["React","Flask","FastAPI","REST APIs","Node.js"],"Cloud and data":["AWS","Docker","Azure","GCP","PostgreSQL","Supabase","Redis"],"AI-assisted and testing":["Claude Code","pytest / JUnit","GitHub Actions","CI/CD"]};
+$("skills-g").innerHTML=Object.keys(S).map(function(k){return '<div class="card skill"><h3>'+k+'</h3>'+tg(S[k])+'</div>'}).join('');
+var J={tech:[
+["Perfect Solutions Group Inc.","Sept 2026 – Present","Software Engineer","Build full-stack web applications, from responsive React front ends to Node.js and Flask REST and GraphQL APIs backed by SQL and NoSQL databases. Implement JWT and OAuth authentication, write unit and integration tests, and deploy through CI/CD pipelines. Work in an Agile/Scrum team.",["React","Node.js","REST / GraphQL","PostgreSQL","CI/CD"]],
+["Sheraton Hotels &amp; Resorts","Sep 2025 – Mar 2026","Software Systems Intern","Built a Python and SQL automation pipeline for data collection and reporting, cutting manual reporting time by 40% and removing recurring data entry errors. Built dashboards for occupancy and guest satisfaction, and used Claude Code to speed up development.",["Python","SQL","Automation","Dashboards"]],
+["GAO Tek Inc.","Jun 2025 – Aug 2025","AI &amp; Web Developer Intern","Developed CUDA and Triton kernels for AI hardware, increasing LLM inference speed by 17%. Built tools to analyze and improve kernel performance.",["CUDA","Triton","LLVM MLIR","PyTorch"]],
+["Boreal Waters Community Foundation","May 2025 – Oct 2025","Research Assistant","Collected, cleaned and integrated large datasets to analyze the effect of federal funding and policy changes across Northeast Minnesota, and presented findings to policymakers and community groups. Received a Letter of Recognition for Undergraduate Research.",["Data cleaning","Visualization","Reporting"]],
+["Sheraton Hotels &amp; Resorts","Apr 2024 – Jan 2025","IT Help Desk","Troubleshot hotel systems and supported staff, resolving issues quickly to keep operations running.",["Technical support","Troubleshooting"]],
+["CUTCO Cutlery","Aug 2024 – Dec 2024","Technology Sales Development Intern","Grew revenue through personalized recommendations, data-informed outreach and client relationship management, consistently exceeding sales targets.",["Communication","Client relations"]],
+["GAO Tek Inc.","May 2024 – Sep 2024","Software Development Intern","Built and maintained applications with Python, REST APIs and web technologies. Set up CI/CD workflows on AWS to automate testing and deployment.",["Python","REST APIs","AWS","CI/CD"]]],
+lead:[
+["UW–Superior","Sep 2025 – May 2026","President, Math &amp; Computer Science Club","Led workshops, hackathons and guest speaker sessions, and managed club activities and budgeting.",["Leadership","Budgeting"]],
+["Educational Success Center","Sep 2025 – May 2026","Student Ambassador Lead &amp; Tutor Cohort Leader","Led student ambassadors and 65+ tutored students, trained peer tutors, and supported outreach, mentoring and recruitment.",["Mentorship","Report automation"]],
+["UW–Superior Housing","Sep 2024 – May 2026","Resident Assistant","Supported residents, enforced community guidelines and planned engagement events.",["Communication","Mentorship"]],
+["UW–Superior","Jan 2023 – May 2026","Outreach","Coordinated events, managed resources and delivered customer service across teams.",["Public speaking","Event planning"]],
+["Educational Success Center","Sep 2023 – Aug 2025","Student Administrative Assistant","Provided administrative and student support, including event coordination and daily office operations.",["Operations","Coordination"]],
+["UW–Superior","Feb 2023 – Sep 2023","Student Involvement Assistant","Coordinated campus-wide events and streamlined registration, reducing wait times and raising turnout.",["Event operations","Process improvement"]],
+["UW–Superior","Nov 2022 – Jan 2023","Administrative Assistant","Worked with campus and district officials to secure funding for the Math and CS departments and sourced resources at the best prices.",["Budget management"]]]};
+function jobs(t){$("jobs").innerHTML=J[t].map(function(j){return '<div class="job"><div><div class="co">'+j[0]+'</div><div class="dt">'+j[1]+'</div></div><div><h3>'+j[2]+'</h3><p>'+j[3]+'</p>'+tg(j[4])+'</div></div>'}).join('')}
+jobs("tech");
+document.querySelectorAll(".tabs button").forEach(function(b){b.onclick=function(){document.querySelectorAll(".tabs button").forEach(function(x){x.setAttribute("aria-selected",x===b)});jobs(b.dataset.t)}});
+var G="https://github.com/Kerima-001/";
+var P=[["Facilitating Student Course Scheduling","Capstone · Python, Selenium, API","Scrapes tuition data with Selenium and serves it through a REST API. Flags anomalies by comparing records against expected billing schedules.",["Python","Selenium","Flask"],G+"Capstone-Project"],
+["Campus Safety Alert App","Mobile · Safety","Real-time safety alerts for UW–Superior with location-aware push notifications and incident reporting.",["Python","Flutter","REST API"],G+"Campus-Safety-Alert"],
+["Department Resource &amp; Budget Tool","Systems · Admin","Resource and budget management for the CS and Math department, streamlining budget reporting and allocation.",["Python","SQL","Automation"],G+"DeptOpsToolkit"],
+["Eco Sense AI","Python · AI","Ingests environmental data and detects sustainability trends with predictive modeling, from raw data to insights.",["Python","ML"],G+"Eco_Sense_Ai"],
+["AI Documentation System","AI · LangChain","Documentation pipeline built at GAO Tek for AI-driven content generation, summarization and code annotation.",["LangChain","Flask","Python"],G+"AI-Doc"],
+["Game Application","Python · OOP","Interactive game with a clean game loop, modular architecture and structured input handling.",["Python","OOP"],G+"?tab=repositories"]];
+$("proj-g").innerHTML=P.map(function(p){return '<a class="card" href="'+p[4]+'" target="_blank" rel="noopener"><div class="k">'+p[1]+'</div><h3>'+p[0]+'</h3><p>'+p[2]+'</p>'+tg(p[3])+'</a>'}).join('');
+var L="https://www.linkedin.com/learning/certificates/";
+var C=[["Microsoft Azure Essentials","Microsoft Press · LinkedIn Learning",L+"e56024caf06088f59bf292576821268a7564638f429c543fc0cc3ddfb4780235/"],
+["Complete Guide to GitHub Copilot for Developers","Microsoft Press · LinkedIn Learning",L+"906ca1c37d0fa3922947cb74f4ddfe2fa94ca3c8693987927ceb98e9a8bfce39/"],
+["Career Essentials in Cybersecurity","Microsoft and LinkedIn",L+"85794681833b5c38c6e0131122f771789f3d84439d6b59b5c55ae9feaacc2757/"],
+["Cybersecurity Foundations","LinkedIn Learning",L+"c382750e26488d9231f6c73e41a304f31eb778dd75b5170a875d52d129388691/"],
+["Practice Exam 2: CompTIA Network+ (N10-009)","LinkedIn Learning",L+"e85840fce85eda9cec719347b3d601a434d30dee239cca140fbd3704f8a72bb9/"],
+["The Cybersecurity Threat Landscape","LinkedIn Learning",L+"ae89c681caf9a885b5477c13d4ee96bdbc17d963d7e5ffab7dddf14e13d5f61b/"],
+["Cybersecurity Awareness: Terminology","LinkedIn Learning",L+"f866f5ee7f7456021e4b48ef254a454c03aab2665c4a971d952955b6c765a644/"],
+["Supporting Technology Literacy","Canvas Credentials",  "https://badges.parchment.com/public/assertions/BcKv_l28SgmNqihlGeLLKA/"],
+["Student Success Mentor Training","Mentor Collective","https://www.mentorcollective.org/"]];
+$("cert-g").innerHTML=C.map(function(c){return '<a class="card" href="'+c[2]+'" target="_blank" rel="noopener"><h3 style="font-size:17px">'+c[0]+'</h3><p style="margin:0">'+c[1]+'</p></a>'}).join('');
+var A=[["2×","Dean’s List","UW–Superior","Recognized on the Dean’s List in two academic terms."],
+["2024–25","Junior Achievement Recognition","School of Business and Economics","Selected for academic excellence in Business Analytics."],
+["2025–26","Khalte &amp; Rhodes Scholar","UW–Superior","Awarded four times for academic merit and demonstrated leadership."],
+["Research","Letter of Recognition for Undergraduate Research","Boreal Waters Community Foundation","Recognized for data-driven research on federal funding and policy changes in Northeast Minnesota."],
+["ESC","Tutor Cohort &amp; Ambassador Leadership Recognition","Educational Success Center","Honored for leading 65+ tutored students and peer ambassadors."]];
+$("awards").innerHTML=A.map(function(a){return '<div class="row"><b>'+a[0]+'</b><div><strong>'+a[1]+'</strong> · '+a[2]+'<small>'+a[3]+'</small></div></div>'}).join('');
+var O=[58,61,67,72,78,86,91,89,80,73,64,70],Q=[4.2,4.2,4.3,4.4,4.4,4.5,4.6,4.5,4.4,4.4,4.3,4.4],M="Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" ");
+var s='<svg class="ch" viewBox="0 0 600 240" role="img" aria-label="Sample monthly occupancy and guest satisfaction chart">';
+[0,50,100].forEach(function(g){var y=200-g*1.84;s+='<line x1="34" x2="590" y1="'+y+'" y2="'+y+'" stroke="var(--line)"/><text x="28" y="'+(y+4)+'" text-anchor="end">'+g+'</text>'});
+var pts=[];O.forEach(function(v,i){var x=42+i*46,h=v*1.84;s+='<rect x="'+x+'" y="'+(200-h)+'" width="30" height="'+h+'" rx="4" style="fill:var(--acc2);opacity:.9"/><text x="'+(x+15)+'" y="218" text-anchor="middle">'+M[i]+'</text>';pts.push((x+15)+','+(200-(Q[i]-4)*184))});
+s+='<polyline points="'+pts.join(' ')+'" fill="none" style="stroke:var(--navy)" stroke-width="2.5"/>';pts.forEach(function(p){var c=p.split(',');s+='<circle cx="'+c[0]+'" cy="'+c[1]+'" r="3.5" style="fill:var(--card);stroke:var(--navy)" stroke-width="2"/>'});
+$("c-occ").innerHTML=s+'</svg>';
+function hb(a){return a.map(function(r){return '<div class="hb"><span>'+r[0]+'</span><div><i class="'+(r[3]||'')+'" style="width:'+(r[1]/(r[4]||120)*100)+'%"></i></div><em>'+r[2]+'</em></div>'}).join('')}
+$("c-imp").innerHTML='<strong style="font-size:14px">Manual reporting time</strong>'+hb([["Before",100,"100","o"],["After",60,"60"]])+'<strong style="font-size:14px">LLM inference speed</strong>'+hb([["Before",100,"100","o"],["After",117,"117"]])+'<p class="note">Real results from my Sheraton and GAO Tek internships.</p>';
+$("c-bud").innerHTML=hb([["Equipment",38,"38%","",40],["Software",24,"24%","",40],["Student wages",22,"22%","",40],["Events",10,"10%","",40],["Other",6,"6%","",40]]);
+$("c-tools").innerHTML=tg(["SQL queries","Python and pandas","Data cleaning","Data integration","KPI reporting","Interactive dashboards","Report automation","Trend analysis","Predictive modeling","Stakeholder presentations"]);
+$("skills").before($("analytics"),$("cases"));
+var a1=[62,64,63,67,70,69,73,76,75,79,82,84],p1=[61,63,65,66,69,71,72,75,77,78,81,85];
+function pl(a){return a.map(function(v,i){return (52+i*45)+','+(190-(v-50)*4.25)}).join(' ')}
+var e='<svg class="ch" viewBox="0 0 600 230" role="img" aria-label="Sample actual versus predicted sustainability index">';
+[50,60,70,80,90].forEach(function(g){var y=190-(g-50)*4.25;e+='<line x1="40" x2="590" y1="'+y+'" y2="'+y+'" stroke="var(--line)"/><text x="34" y="'+(y+4)+'" text-anchor="end">'+g+'</text>'});
+M.forEach(function(m,i){e+='<text x="'+(52+i*45)+'" y="212" text-anchor="middle">'+m+'</text>'});
+$("c-eco").innerHTML=e+'<polyline points="'+pl(a1)+'" fill="none" style="stroke:var(--navy)" stroke-width="2.5"/><polyline points="'+pl(p1)+'" fill="none" style="stroke:var(--acc)" stroke-width="2.5" stroke-dasharray="6 5"/></svg>';
+var vv=[0.4,1.1,-0.6,7.8,0.9,-1.2,6.3,0.5,-0.3,1.4],cp='<svg class="ch" viewBox="0 0 300 200" role="img" aria-label="Sample billing variance by batch">';
+[5,-5].forEach(function(t){var y=100-t*10;cp+='<line x1="14" x2="296" y1="'+y+'" y2="'+y+'" stroke="var(--ink)" stroke-dasharray="4 4"/>'});
+cp+='<line x1="14" x2="296" y1="100" y2="100" stroke="var(--mute)"/>';
+vv.forEach(function(x,i){var h=Math.abs(x)*10,px=22+i*27;cp+='<rect x="'+px+'" y="'+(x>0?100-h:100)+'" width="18" height="'+h+'" rx="2" style="fill:var('+(Math.abs(x)>5?'--acc':'--acc2')+')"/><text x="'+(px+9)+'" y="190" text-anchor="middle">'+(i+1)+'</text>'});
+$("c-cap").innerHTML=cp+'</svg>';
+$("c-saf").innerHTML=hb([["Morning",8,"8","o",30],["Afternoon",14,"14","o",30],["Evening",22,"22","",30],["Late night",27,"27","",30]]);
+var SL=[
+{t:'Intro',l:'Business analyst &amp; data operations',h:'I turn operational data into decisions and automated reports.',p:'Data cleaning, KPI reporting, dashboards and the software that keeps operations running.',b:['See projects','#projects'],v:function(){return '<div class="vis">'+[['7','roles and internships'],['6','projects with data visuals'],['9','certifications']].map(function(c){return '<div class="chip"><b>'+c[0]+'</b><span>'+c[1]+'</span></div>'}).join('')+'</div>'}},
+{t:'Analytics',l:'Business analytics',h:'40% less manual reporting.',p:'A Python and SQL pipeline at Sheraton replaced repeated data entry and gave managers live dashboards.',b:['View analytics','#analytics'],v:function(){return '<div class="vis">'+vb([['Before',100,'100',''],['After',60,'60','a']])+'<small>Manual reporting time, indexed to 100</small></div>'}},
+{t:'AI',l:'AI performance',h:'17% faster LLM inference.',p:'Custom CUDA and Triton kernels built at GAO Tek for AI hardware.',b:['See experience','#experience'],v:function(){return '<div class="vis">'+vb([['Before',85,'100',''],['After',100,'117','a']])+'<small>LLM inference speed, indexed to 100</small></div>'}},
+{t:'Leadership',l:'Leadership',h:'Led 65+ students and a CS club.',p:'President of the Math &amp; Computer Science Club, tutor cohort leader and resident assistant.',b:['Campus leadership','#experience'],v:function(){return '<div class="vis"><div class="dg">'+Array.apply(null,Array(65)).map(function(_,i){return '<i style="animation-delay:'+(i*14)+'ms"></i>'}).join('')+'</div><small>65+ students led as tutor cohort leader</small></div>'}}];
+function vb(r){return r.map(function(x){return '<div class="vb"><span>'+x[0]+'</span><div><i class="'+x[3]+'" style="width:'+x[1]+'%"></i></div><b>'+x[2]+'</b></div>'}).join('')}
+var sl=$('sl'),si=0,tm,pz=false,rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+sl.innerHTML='<div class="sl-ar"><button data-d="-1" aria-label="Previous slide">\u2039</button><button data-d="1" aria-label="Next slide">\u203a</button></div><div class="sl-st" id="sl-st" aria-live="polite"></div><div class="sl-tabs">'+SL.map(function(s,i){return '<button data-i="'+i+'">'+s.t+'</button>'}).join('')+'</div>';
+function run(){clearInterval(tm);if(!rm&&!pz)tm=setInterval(function(){go(si+1)},6000)}
+function go(i){si=(i+SL.length)%SL.length;var s=SL[si];$('sl-st').innerHTML='<div><span class="lb">'+s.l+'</span><h2>'+s.h+'</h2><p>'+s.p+'</p><a class="go" href="'+s.b[1]+'">'+s.b[0]+'</a></div>'+s.v();document.querySelectorAll('.sl-tabs button').forEach(function(b,j){b.setAttribute('aria-selected',j===si)});run()}
+sl.onclick=function(e){var b=e.target.closest('[data-i]'),d=e.target.closest('[data-d]');if(b)go(+b.dataset.i);else if(d)go(si+ +d.dataset.d)};
+sl.onmouseenter=sl.onfocusin=function(){pz=true;clearInterval(tm)};sl.onmouseleave=sl.onfocusout=function(){pz=false;run()};
+var tx=0;sl.ontouchstart=function(e){tx=e.touches[0].clientX};sl.ontouchend=function(e){var d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>50)go(si+(d<0?1:-1))};
+go(0);
+var steps=['Question','Collect','Clean','Analyze','Visualize','Act'];
+$('pipe').innerHTML=`<div class='pp'>${steps.map((s,i)=>`<div><b>${i+1}</b>${s}</div>`).join('')}</div>`;
+function sp(v,a,b){var p=v.map((y,i)=>[4+i*112/(v.length-1),32-(y-a)/(b-a)*28]),l=p[p.length-1];return `<svg viewBox='0 0 120 36' width='100%' role='img' aria-label='Trend line'><polyline points='${p.join(' ')}' fill='none' stroke='var(--acc)' stroke-width='2'/><circle cx='${l[0]}' cy='${l[1]}' r='3' fill='var(--navy)'/></svg>`}
+$('kb').innerHTML=[['78%','Occupancy rate',[58,61,67,72,78],50,90],['4.4','Guest score out of 5',[4.1,4.2,4.4,4.3,4.4],4,4.6],['6 hrs','Weekly reporting time',[10,10,9,6.5,6],5,11],['18','Records flagged',[2,5,3,4,2],0,6]].map(k=>`<div class='card'><b>${k[0]}</b><span>${k[1]}</span>${sp(k[2],k[3],k[4])}</div>`).join('');
+function sv(h){return `<svg class='ch' viewBox='0 0 360 200' role='img' aria-label='Sample chart'>${h}</svg>`}
+var hrs=[10,10,10,9.5,10,10,6.5,6,6,6.2,6,6],c1='';
+[0,6,12].forEach(g=>{var y=175-g*12.5;c1+=`<line x1='30' x2='350' y1='${y}' y2='${y}' stroke='var(--line)'/><text x='24' y='${y+4}' text-anchor='end'>${g}</text>`});
+c1+=`<polyline fill='none' stroke='var(--acc)' stroke-width='3' points='${hrs.map((v,i)=>(40+i*28)+','+(175-v*12.5)).join(' ')}'/><line x1='208' x2='208' y1='14' y2='175' stroke='var(--navy)' stroke-dasharray='4 4'/><text x='214' y='26'>Automation live</text><text x='40' y='193'>Week 1</text><text x='350' y='193' text-anchor='end'>12</text>`;
+var dys=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],mo=['Jan','Feb','Mar','Apr','May','Jun'],bs=[60,58,62,68,82,93,86],c2='';
+mo.forEach((m,c)=>{c2+=`<text x='${82+c*48}' y='14' text-anchor='middle'>${m}</text>`});
+dys.forEach((d,r)=>{c2+=`<text x='54' y='${38+r*22}' text-anchor='end'>${d}</text>`;mo.forEach((m,c)=>{var v=Math.min(98,bs[r]+c*3);c2+=`<rect x='${60+c*48}' y='${24+r*22}' width='44' height='19' rx='3' fill='var(--acc)' opacity='${((v-50)/50).toFixed(2)}'/>`})});
+c2+=`<text x='60' y='192'>Darker blue means higher occupancy</text>`;
+var dn=[[38,'var(--acc)',1,'Equipment'],[24,'var(--navy)',1,'Software'],[22,'var(--acc2)',1,'Student wages'],[10,'var(--acc)',.45,'Events'],[6,'var(--acc2)',.45,'Other']],c3='',off=0;
+dn.forEach((d,i)=>{var L=d[0]*3.77;c3+=`<circle cx='100' cy='100' r='60' fill='none' stroke='${d[1]}' stroke-opacity='${d[2]}' stroke-width='30' stroke-dasharray='${L} ${377-L}' stroke-dashoffset='${-off*3.77}' transform='rotate(-90 100 100)'/><rect x='200' y='${50+i*28}' width='13' height='13' rx='2' fill='${d[1]}' fill-opacity='${d[2]}'/><text x='222' y='${61+i*28}'>${d[3]} ${d[0]}%</text>`;off+=d[0]});
+c3+=`<text x='100' y='105' text-anchor='middle' style='font-size:16px;font-weight:700;fill:var(--ink)'>Budget</text>`;
+var fn=hb([['Scraped',1000,'1,000','',1000],['Validated',940,'940','',1000],['Compared',920,'920','',1000],['Flagged',18,'18','o',1000],['Confirmed',11,'11','o',1000]]);
+var CS=[
+['Sheraton Hotels &amp; Resorts','Reporting bottleneck','Managers waited days for occupancy and guest reports that staff rebuilt by hand every week.','I mapped the manual steps, then wrote a Python and SQL pipeline to collect and clean the data and feed a live dashboard.','Manual reporting time fell 40% and the recurring data entry errors stopped.','Python · SQL · Dashboards',sv(c1),'Hours spent on reporting each week (sample data). The 40% cut is the real result.'],
+['Hotel demand analysis','Spotting demand patterns','Rooms were priced the same all week, even though some nights filled up and others stayed empty.','I grouped occupancy by weekday and month and compared it with guest satisfaction scores.','The view shows clear weekend peaks and weak midweek nights, a basis for targeted offers.','SQL · Excel · Visualization',sv(c2),'Occupancy by weekday and month (sample data).'],
+['Department budget tool','Budget planning','Spending was tracked in scattered spreadsheets, so leaders could not see where the money went.','I built a resource and budget tool that stores every purchase by category and produces reports automatically.','One shared view of spending by category and much faster budget reports.','Python · SQL · Automation',sv(c3),'Share of budget by category (sample data).'],
+['Capstone project','Catching billing errors','Tuition charges had to be checked against expected billing by hand, and mistakes were easy to miss.','I collected tuition records with Selenium, served them through a REST API and flagged any batch more than 5% away from expected billing.','Only a handful of records needed human review, and the checks ran automatically.','Python · Selenium · REST API','<div style="padding:6px 0">'+fn+'</div>','Records left at each step of the check (sample data).']];
+$('cs').innerHTML=CS.map(s=>`<div class='cs'><div><div class='k'>${s[0]}</div><h3>${s[1]}</h3><div class='st'><p><b>Situation.</b> ${s[2]}</p><p><b>What I did.</b> ${s[3]}</p><p><b>Result.</b> ${s[4]}</p></div>${tg(s[5].split(' · '))}</div><div class='cv'>${s[6]}<p class='note'>${s[7]}</p></div></div>`).join('');
 </script>
-
 </body>
 </html>
